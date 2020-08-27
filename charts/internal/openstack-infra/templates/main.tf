@@ -29,8 +29,8 @@ resource "openstack_networking_network_v2" "cluster" {
   admin_state_up = "true"
 }
 
-resource "openstack_networking_subnet_v2" "cluster" {
-  name            = "{{ required "clusterName is required" .Values.clusterName }}"
+resource "openstack_networking_subnet_v2" "cluster-v4" {
+  name            = "{{ required "clusterName is required" .Values.clusterName }}-v4"
   cidr            = "{{ required "networks.workers is required" .Values.networks.workers }}"
   network_id      = "${openstack_networking_network_v2.cluster.id}"
   ip_version      = 4
@@ -41,9 +41,25 @@ resource "openstack_networking_subnet_v2" "cluster" {
   {{- end }}
 }
 
-resource "openstack_networking_router_interface_v2" "router_nodes" {
+resource "openstack_networking_subnet_v2" "cluster-v6" {
+  name            = "{{ required "clusterName is required" .Values.clusterName }}-v6"
+  cidr            = "fd00:0:1::/64"
+  network_id      = "${openstack_networking_network_v2.cluster.id}"
+  ip_version      = 6
+  ipv6_ra_mode      = "slaac"
+  ipv6_address_mode = "slaac"  
+  dns_nameservers = ["2001:4860:4860::8888"]
+}
+
+
+resource "openstack_networking_router_interface_v2" "router_nodes_v4" {
   router_id = "{{ required "router.id is required" $.Values.router.id }}"
-  subnet_id = "${openstack_networking_subnet_v2.cluster.id}"
+  subnet_id = "${openstack_networking_subnet_v2.cluster-v4.id}"
+}
+
+resource "openstack_networking_router_interface_v2" "router_nodes_v6" {
+  router_id = "{{ required "router.id is required" $.Values.router.id }}"
+  subnet_id = "${openstack_networking_subnet_v2.cluster-v6.id}"
 }
 
 resource "openstack_networking_secgroup_v2" "cluster" {
@@ -52,20 +68,33 @@ resource "openstack_networking_secgroup_v2" "cluster" {
   delete_default_rules = true
 }
 
-resource "openstack_networking_secgroup_rule_v2" "cluster_self" {
+resource "openstack_networking_secgroup_rule_v2" "cluster_self_v4" {
   direction         = "ingress"
   ethertype         = "IPv4"
   security_group_id = "${openstack_networking_secgroup_v2.cluster.id}"
   remote_group_id   = "${openstack_networking_secgroup_v2.cluster.id}"
 }
 
-resource "openstack_networking_secgroup_rule_v2" "cluster_egress" {
+resource "openstack_networking_secgroup_rule_v2" "cluster_self_v6" {
+  direction         = "ingress"
+  ethertype         = "IPv6"
+  security_group_id = "${openstack_networking_secgroup_v2.cluster.id}"
+  remote_group_id   = "${openstack_networking_secgroup_v2.cluster.id}"
+}
+
+resource "openstack_networking_secgroup_rule_v2" "cluster_egress_v4" {
   direction         = "egress"
   ethertype         = "IPv4"
   security_group_id = "${openstack_networking_secgroup_v2.cluster.id}"
 }
 
-resource "openstack_networking_secgroup_rule_v2" "cluster_tcp_all" {
+resource "openstack_networking_secgroup_rule_v2" "cluster_egress_v6" {
+  direction         = "egress"
+  ethertype         = "IPv6"
+  security_group_id = "${openstack_networking_secgroup_v2.cluster.id}"
+}
+
+resource "openstack_networking_secgroup_rule_v2" "cluster_tcp_all_v4" {
   direction         = "ingress"
   ethertype         = "IPv4"
   protocol          = "tcp"
@@ -74,6 +103,17 @@ resource "openstack_networking_secgroup_rule_v2" "cluster_tcp_all" {
   remote_ip_prefix  = "0.0.0.0/0"
   security_group_id = "${openstack_networking_secgroup_v2.cluster.id}"
 }
+
+resource "openstack_networking_secgroup_rule_v2" "cluster_tcp_all_v6" {
+  direction         = "ingress"
+  ethertype         = "IPv6"
+  protocol          = "tcp"
+  port_range_min    = 1
+  port_range_max    = 65535
+  remote_ip_prefix  = "::/0"
+  security_group_id = "${openstack_networking_secgroup_v2.cluster.id}"
+}
+
 
 //=====================================================================
 //= SSH Key for Nodes (Bastion and Worker)
@@ -123,5 +163,5 @@ output "{{ .Values.outputKeys.floatingNetworkID }}" {
 }
 
 output "{{ .Values.outputKeys.subnetID }}" {
-  value = "${openstack_networking_subnet_v2.cluster.id}"
+  value = "${openstack_networking_subnet_v2.cluster-v4.id}"
 }

@@ -13,10 +13,10 @@
 # limitations under the License.
 
 EXTENSION_PREFIX            := gardener-extension
-NAME                        := provider-openstack
+NAME                        := gardener-extension-provider-openstack
 VALIDATOR_NAME              := validator-openstack
-REGISTRY                    := eu.gcr.io/gardener-project/gardener
-IMAGE_PREFIX                := $(REGISTRY)/extensions
+REGISTRY                    := einfachnuralex
+IMAGE_PREFIX                := $(REGISTRY)
 REPO_ROOT                   := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 HACK_DIR                    := $(REPO_ROOT)/hack
 VERSION                     := $(shell cat "$(REPO_ROOT)/VERSION")
@@ -76,8 +76,11 @@ docker-login:
 
 .PHONY: docker-images
 docker-images:
-	@docker build -t $(IMAGE_PREFIX)/$(NAME):$(VERSION)           -t $(IMAGE_PREFIX)/$(NAME):latest           -f Dockerfile -m 6g --target $(EXTENSION_PREFIX)-$(NAME)           .
-	@docker build -t $(IMAGE_PREFIX)/$(VALIDATOR_NAME):$(VERSION) -t $(IMAGE_PREFIX)/$(VALIDATOR_NAME):latest -f Dockerfile -m 6g --target $(EXTENSION_PREFIX)-$(VALIDATOR_NAME) .
+	@docker build -t $(IMAGE_PREFIX)/$(NAME):$(VERSION)           -t $(IMAGE_PREFIX)/$(NAME):latest           -f Dockerfile -m 6g --target $(NAME)           .
+	#@docker build -t $(IMAGE_PREFIX)/$(VALIDATOR_NAME):$(VERSION) -t $(IMAGE_PREFIX)/$(VALIDATOR_NAME):latest -f Dockerfile -m 6g --target $(EXTENSION_PREFIX)-$(VALIDATOR_NAME) .
+
+docker-push:
+	@docker push $(IMAGE_PREFIX)/$(NAME):$(VERSION) 
 
 #####################################################################
 # Rules for verification, formatting, linting, testing and cleaning #

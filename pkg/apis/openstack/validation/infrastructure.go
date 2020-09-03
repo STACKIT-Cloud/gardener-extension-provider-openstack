@@ -15,7 +15,6 @@
 package validation
 
 import (
-	"k8s.io/utils/net"
 	"reflect"
 	"sort"
 	"strings"
@@ -60,14 +59,6 @@ func ValidateInfrastructureConfig(infra *api.InfrastructureConfig, nodesCIDR *st
 			cidr := cidrvalidation.NewCIDR(svcCidr, path)
 			allErrs = append(allErrs, cidr.ValidateParse()...)
 			allErrs = append(allErrs, cidrvalidation.ValidateCIDRIsCanonical(path, cidr.GetCIDR())...)
-		}
-	}
-
-	if infra.Networks.DualHomed {
-		path := fldPath.Child("DualHomed")
-		res, err := net.IsDualStackCIDRStrings(strings.Split(infra.Networks.Workers, ","))
-		if err != nil || !res {
-			allErrs = append(allErrs, field.Invalid(path, infra.Networks.Workers, "when DualHomed enabled, you have to define ipv4 and ipv6"))
 		}
 	}
 

@@ -15,8 +15,10 @@
 package validation
 
 import (
+	"k8s.io/utils/net"
 	"reflect"
 	"sort"
+	"strings"
 
 	api "github.com/gardener/gardener-extension-provider-openstack/pkg/apis/openstack"
 	"github.com/gardener/gardener-extension-provider-openstack/pkg/utils"
@@ -51,10 +53,22 @@ func ValidateInfrastructureConfig(infra *api.InfrastructureConfig, nodesCIDR *st
 		allErrs = append(allErrs, cidrvalidation.ValidateCIDRParse(workerCIDR)...)
 		allErrs = append(allErrs, cidrvalidation.ValidateCIDRIsCanonical(networksPath.Child("worker"), infra.Networks.Worker)...)
 	}
+
 	if infra.Networks.Workers != "" {
-		workerCIDR = cidrvalidation.NewCIDR(infra.Networks.Workers, networksPath.Child("workers"))
-		allErrs = append(allErrs, cidrvalidation.ValidateCIDRParse(workerCIDR)...)
-		allErrs = append(allErrs, cidrvalidation.ValidateCIDRIsCanonical(networksPath.Child("workers"), infra.Networks.Workers)...)
+		path := fldPath.Child("workers")
+		for _, svcCidr := range strings.Split(infra.Networks.Workers, ",") {
+			cidr := cidrvalidation.NewCIDR(svcCidr, path)
+			allErrs = append(allErrs, cidr.ValidateParse()...)
+			allErrs = append(allErrs, cidrvalidation.ValidateCIDRIsCanonical(path, cidr.GetCIDR())...)
+		}
+	}
+
+	if infra.Networks.DualHomed {
+		path := fldPath.Child("DualHomed")
+		res, err := net.IsDualStackCIDRStrings(strings.Split(infra.Networks.Workers, ","))
+		if err != nil || !res {
+			allErrs = append(allErrs, field.Invalid(path, infra.Networks.Workers, "when DualHomed enabled, you have to define ipv4 and ipv6"))
+		}
 	}
 
 	if nodes != nil {

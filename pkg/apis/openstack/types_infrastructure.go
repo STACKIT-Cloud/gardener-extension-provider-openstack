@@ -40,6 +40,8 @@ type Networks struct {
 	Worker string
 	// Workers is a CIDRs of a worker subnet (private) to create (used for the VMs).
 	Workers string
+	// Decides if the nodes should have two interfaces
+	DualHomed bool
 }
 
 // Router indicates whether to use an existing router or create a new one.

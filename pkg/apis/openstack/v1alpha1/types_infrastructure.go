@@ -73,7 +73,8 @@ type NodeStatus struct {
 // NetworkStatus contains information about a generated Network or resources created in an existing Network.
 type NetworkStatus struct {
 	// ID is the Network id.
-	ID string `json:"id"`
+	ID   string `json:"id"`
+	IDv6 string `json:"idv6,omitempty"`
 	// FloatingPool contains information about the floating pool.
 	FloatingPool FloatingPoolStatus `json:"floatingPool"`
 	// Router contains information about the Router and related resources.

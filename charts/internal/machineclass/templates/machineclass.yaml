@@ -35,6 +35,7 @@ spec:
   imageName: {{ $machineClass.imageName }}
 {{- end }}
   networkID: {{ $machineClass.networkID }}
+  networkIDv6: {{ $machineClass.networkIDv6 }}
   podNetworkCidr: {{ $machineClass.podNetworkCidr }}
 {{- if $machineClass.rootDiskSize }}
   rootDiskSize: {{ $machineClass.rootDiskSize }}

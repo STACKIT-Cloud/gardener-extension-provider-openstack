@@ -51,11 +51,7 @@ resource "openstack_networking_network_v2" "cluster" {
 resource "openstack_networking_subnet_v2" "cluster-v4" {
   name            = "{{ required "clusterName is required" .Values.clusterName }}-v4"
 
-  {{ if eq len (split "," .Values.networks.workers) 1 }}
-  cidr            = "{{ required "networks.workers is required" .Values.networks.workers }}"
-  {{- else}}
-  cidr            = "{{ required "networks.workers is required" (split "," .Values.networks.workers)._0 }}"
-  {{- end}}
+  cidr            = "{{ required "networks.workers is required" ((split "," .Values.networks.workers)._0) }}"
 
   network_id      = openstack_networking_network_v2.cluster.id
   ip_version      = 4
@@ -67,13 +63,9 @@ resource "openstack_networking_subnet_v2" "cluster-v4" {
   {{- end }}
 }
 
-<<<<<<< HEAD
-
-=======
-{{ if gt len (split "," .Values.networks.workers) 1 }}
->>>>>>> 6eea5b8... introduced dualHomed in terraform
+{{ if gt (len (split "," .Values.networks.workers)) 1 }}
 resource "openstack_networking_subnet_v2" "cluster-v6" {
-  name            = "{{ required "clusterName is required" .Values.clusterName }}-v4"
+  name            = "{{ required "clusterName is required" .Values.clusterName }}-v6"
   cidr            = "{{ required "networks.workers is required" (split "," .Values.networks.workers)._1 }}"
   {{ if .Values.networks.dualHomed }}
   network_id      = "${openstack_networking_network_v2.cluster-v6.id}"
@@ -85,8 +77,6 @@ resource "openstack_networking_subnet_v2" "cluster-v6" {
   ipv6_ra_mode      = "dhcp-v6-stateful"
   ipv6_address_mode = "dhcp-v6-stateful"
 
-<<<<<<< HEAD
-=======
   {{- if .Values.dnsServers }}
   dns_nameservers = [{{- include "openstack-infra.dnsServers" . | trimSuffix ", " }}]
   {{- else }}
@@ -95,7 +85,6 @@ resource "openstack_networking_subnet_v2" "cluster-v6" {
 }
 {{- end}}
 
->>>>>>> 6eea5b8... introduced dualHomed in terraform
 resource "openstack_networking_router_interface_v2" "router_nodes_v4" {
   router_id = "{{ required "router.id is required" $.Values.router.id }}"
   subnet_id = "${openstack_networking_subnet_v2.cluster-v4.id}"
@@ -221,13 +210,9 @@ output "{{ .Values.outputKeys.floatingSubnetID }}" {
 {{- end }}
 
 output "{{ .Values.outputKeys.subnetID }}" {
-<<<<<<< HEAD
-  value = openstack_networking_subnet_v2.cluster-v4.id
-=======
   {{ if .Values.networks.dualHomed }}
-  value = "${openstack_networking_subnet_v2.cluster-v4.id}"
+  value = openstack_networking_subnet_v2.cluster-v4.id
   {{- else }}
-  value = "${openstack_networking_subnet_v2.cluster-v6.id}"
+  value = openstack_networking_subnet_v2.cluster-v6.id
   {{- end }}
->>>>>>> 6eea5b8... introduced dualHomed in terraform
 }

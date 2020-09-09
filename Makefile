@@ -79,8 +79,6 @@ docker-login:
 docker-images:
 	@docker build -t $(IMAGE_PREFIX)/$(NAME):$(VERSION)           -t $(IMAGE_PREFIX)/$(NAME):latest           -f Dockerfile -m 6g --target $(NAME)           .
 	#@docker build -t $(IMAGE_PREFIX)/$(VALIDATOR_NAME):$(VERSION) -t $(IMAGE_PREFIX)/$(VALIDATOR_NAME):latest -f Dockerfile -m 6g --target $(EXTENSION_PREFIX)-$(VALIDATOR_NAME) .
-
-docker-push:
 	@docker push $(IMAGE_PREFIX)/$(NAME):$(VERSION) 
 
 #####################################################################

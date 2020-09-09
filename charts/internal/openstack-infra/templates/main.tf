@@ -77,11 +77,7 @@ resource "openstack_networking_subnet_v2" "cluster-v6" {
   ipv6_ra_mode      = "dhcpv6-stateful"
   ipv6_address_mode = "dhcpv6-stateful"
 
-  {{- if .Values.dnsServers }}
-  dns_nameservers = [{{- include "openstack-infra.dnsServers" . | trimSuffix ", " }}]
-  {{- else }}
   dns_nameservers = []
-  {{- end }}
 }
 {{- end}}
 

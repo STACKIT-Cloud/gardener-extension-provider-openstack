@@ -128,7 +128,8 @@ func ComputeTerraformerChartValues(
 		"router":       routerConfig,
 		"clusterName":  infra.Namespace,
 		"networks": map[string]interface{}{
-			"workers": workersCIDR,
+			"workers":   workersCIDR,
+			"dualHomed": config.Networks.DualHomed,
 		},
 		"outputKeys": outputKeysConfig,
 	}, nil

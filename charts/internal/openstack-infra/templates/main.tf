@@ -206,9 +206,13 @@ output "{{ .Values.outputKeys.floatingSubnetID }}" {
 {{- end }}
 
 output "{{ .Values.outputKeys.subnetID }}" {
-  {{ if .Values.networks.dualHomed }}
   value = openstack_networking_subnet_v2.cluster-v4.id
-  {{- else }}
+}
+
+output "{{ .Values.outputKeys.subnetIDv6 }}" {
+  {{ if .Values.networks.dualHomed }}
   value = openstack_networking_subnet_v2.cluster-v6.id
+  {{- else }}
+  value = openstack_networking_subnet_v2.cluster-v4.id
   {{- end }}
 }

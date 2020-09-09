@@ -188,9 +188,13 @@ output "{{ .Values.outputKeys.floatingNetworkID }}" {
 }
 
 output "{{ .Values.outputKeys.subnetID }}" {
-  {{ if .Values.networks.dualHomed }}
   value = "${openstack_networking_subnet_v2.cluster-v4.id}"
-  {{- else }}
+}
+
+output "{{ .Values.outputKeys.subnetIDv6 }}" {
+  {{ if gt (len (split "," .Values.networks.workers)) 1 }}
   value = "${openstack_networking_subnet_v2.cluster-v6.id}"
+  {{- else }}
+  value = "${openstack_networking_subnet_v2.cluster-v4.id}"
   {{- end }}
 }

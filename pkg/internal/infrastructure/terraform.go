@@ -110,7 +110,8 @@ func ComputeTerraformerChartValues(
 		},
 		"clusterName": infra.Namespace,
 		"networks": map[string]interface{}{
-			"workers": workersCIDR,
+			"workers":   workersCIDR,
+			"dualHomed": config.Networks.DualHomed,
 		},
 		"outputKeys": map[string]interface{}{
 			"routerID":          TerraformOutputKeyRouterID,

@@ -448,6 +448,11 @@ func (in *Networks) DeepCopyInto(out *Networks) {
 		*out = new(Router)
 		**out = **in
 	}
+	if in.DualHomed != nil {
+		in, out := &in.DualHomed, &out.DualHomed
+		*out = new(bool)
+		**out = **in
+	}
 	return
 }
 

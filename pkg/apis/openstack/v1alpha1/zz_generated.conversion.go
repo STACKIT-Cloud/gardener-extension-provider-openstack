@@ -24,6 +24,7 @@ import (
 	unsafe "unsafe"
 
 	openstack "github.com/gardener/gardener-extension-provider-openstack/pkg/apis/openstack"
+	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	conversion "k8s.io/apimachinery/pkg/conversion"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 )
@@ -626,6 +627,7 @@ func Convert_openstack_MachineImages_To_v1alpha1_MachineImages(in *openstack.Mac
 
 func autoConvert_v1alpha1_NetworkStatus_To_openstack_NetworkStatus(in *NetworkStatus, out *openstack.NetworkStatus, s conversion.Scope) error {
 	out.ID = in.ID
+	out.IDv6 = in.IDv6
 	if err := Convert_v1alpha1_FloatingPoolStatus_To_openstack_FloatingPoolStatus(&in.FloatingPool, &out.FloatingPool, s); err != nil {
 		return err
 	}
@@ -643,6 +645,7 @@ func Convert_v1alpha1_NetworkStatus_To_openstack_NetworkStatus(in *NetworkStatus
 
 func autoConvert_openstack_NetworkStatus_To_v1alpha1_NetworkStatus(in *openstack.NetworkStatus, out *NetworkStatus, s conversion.Scope) error {
 	out.ID = in.ID
+	out.IDv6 = in.IDv6
 	if err := Convert_openstack_FloatingPoolStatus_To_v1alpha1_FloatingPoolStatus(&in.FloatingPool, &out.FloatingPool, s); err != nil {
 		return err
 	}
@@ -662,6 +665,9 @@ func autoConvert_v1alpha1_Networks_To_openstack_Networks(in *Networks, out *open
 	out.Router = (*openstack.Router)(unsafe.Pointer(in.Router))
 	out.Worker = in.Worker
 	out.Workers = in.Workers
+	if err := v1.Convert_Pointer_bool_To_bool(&in.DualHomed, &out.DualHomed, s); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -674,6 +680,9 @@ func autoConvert_openstack_Networks_To_v1alpha1_Networks(in *openstack.Networks,
 	out.Router = (*Router)(unsafe.Pointer(in.Router))
 	out.Worker = in.Worker
 	out.Workers = in.Workers
+	if err := v1.Convert_bool_To_Pointer_bool(&in.DualHomed, &out.DualHomed, s); err != nil {
+		return err
+	}
 	return nil
 }
 

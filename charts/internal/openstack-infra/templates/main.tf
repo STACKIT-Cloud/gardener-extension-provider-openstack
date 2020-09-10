@@ -74,10 +74,13 @@ resource "openstack_networking_router_interface_v2" "router_nodes_v4" {
   subnet_id = "${openstack_networking_subnet_v2.cluster-v4.id}"
 }
 
+{{- if gt (len (split "," .Values.networks.workers)) 1 }}
 resource "openstack_networking_router_interface_v2" "router_nodes_v6" {
   router_id = "{{ required "router.id is required" $.Values.router.id }}"
   subnet_id = "${openstack_networking_subnet_v2.cluster-v6.id}"
 }
+{{- end }}
+
 
 resource "openstack_networking_secgroup_v2" "cluster" {
   name                 = "{{ required "clusterName is required" .Values.clusterName }}"

@@ -21,7 +21,7 @@ images:
 - name: machine-controller-manager
   sourceRepository: github.com/gardener/machine-controller-manager
   repository: registry.alpha.ske.eu01.stackit.cloud/gardener-ds/machine-controller-manager
-  tag: "v0.31.13"
+  tag: "v0.31.14"
 
 - name: csi-driver-cinder
   sourceRepository: github.com/kubernetes/cloud-provider-openstack

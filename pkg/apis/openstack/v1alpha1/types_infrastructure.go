@@ -46,6 +46,9 @@ type Networks struct {
 	// This flag indicates if one or two L2 networks shall be created
 	// +optional
 	DualHomed *bool `json:"dualHomed"`
+	// SubnetPoolID
+	// +optional
+	SubnetPoolID *string `json:"subnetPoolID"`
 }
 
 // Router indicates whether to use an existing router or create a new one.

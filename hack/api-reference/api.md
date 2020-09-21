@@ -1087,6 +1087,18 @@ bool
 <p>This flag indicates if one or two L2 networks shall be created</p>
 </td>
 </tr>
+<tr>
+<td>
+<code>subnetPoolID</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>SubnetPoolID</p>
+</td>
+</tr>
 </tbody>
 </table>
 <h3 id="openstack.provider.extensions.gardener.cloud/v1alpha1.NodeStatus">NodeStatus

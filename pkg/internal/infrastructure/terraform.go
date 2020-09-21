@@ -17,6 +17,7 @@ package infrastructure
 import (
 	"path/filepath"
 	"strconv"
+	"strings"
 
 	api "github.com/gardener/gardener-extension-provider-openstack/pkg/apis/openstack"
 	"github.com/gardener/gardener-extension-provider-openstack/pkg/apis/openstack/helper"
@@ -112,6 +113,16 @@ func ComputeTerraformerChartValues(
 		workersCIDR = config.Networks.Worker
 	}
 
+	serviceCidr := ""
+	if arr := strings.Split(*cluster.Shoot.Spec.Networking.Services, ","); len(arr) > 1 {
+		serviceCidr = arr[1]
+	}
+
+	podCidr := ""
+	if arr := strings.Split(*cluster.Shoot.Spec.Networking.Pods, ","); len(arr) > 1 {
+		podCidr = arr[1]
+	}
+
 	return map[string]interface{}{
 		"openstack": map[string]interface{}{
 			"authURL":          keyStoneURL,
@@ -128,8 +139,11 @@ func ComputeTerraformerChartValues(
 		"router":       routerConfig,
 		"clusterName":  infra.Namespace,
 		"networks": map[string]interface{}{
-			"workers":   workersCIDR,
-			"dualHomed": config.Networks.DualHomed,
+			"workers":       workersCIDR,
+			"dualHomed":     config.Networks.DualHomed,
+			"subnetPoolID":  config.Networks.SubnetPoolID,
+			"serviceV6CIDR": serviceCidr,
+			"podV6CIDR":     podCidr,
 		},
 		"outputKeys": outputKeysConfig,
 	}, nil
@@ -234,7 +248,6 @@ func ExtractTerraformState(tf terraformer.Terraformer, config *api.Infrastructur
 // StatusFromTerraformState computes an InfrastructureStatus from the given
 // Terraform variables.
 func StatusFromTerraformState(state *TerraformState) *apiv1alpha1.InfrastructureStatus {
-<<<<<<< HEAD
 	floatingPoolStatus := apiv1alpha1.FloatingPoolStatus{
 		ID: state.FloatingNetworkID,
 	}
@@ -249,32 +262,10 @@ func StatusFromTerraformState(state *TerraformState) *apiv1alpha1.Infrastructure
 		},
 		Networks: apiv1alpha1.NetworkStatus{
 			ID:           state.NetworkID,
+			IDv6:         state.NetworkIDv6,
 			FloatingPool: floatingPoolStatus,
 			Router: apiv1alpha1.RouterStatus{
 				ID: state.RouterID,
-=======
-	var (
-		status = &apiv1alpha1.InfrastructureStatus{
-			TypeMeta: metav1.TypeMeta{
-				APIVersion: apiv1alpha1.SchemeGroupVersion.String(),
-				Kind:       "InfrastructureStatus",
-			},
-			Networks: apiv1alpha1.NetworkStatus{
-				ID:   state.NetworkID,
-				IDv6: state.NetworkIDv6,
-				FloatingPool: apiv1alpha1.FloatingPoolStatus{
-					ID: state.FloatingNetworkID,
-				},
-				Router: apiv1alpha1.RouterStatus{
-					ID: state.RouterID,
-				},
-				Subnets: []apiv1alpha1.Subnet{
-					{
-						Purpose: apiv1alpha1.PurposeNodes,
-						ID:      state.SubnetID,
-					},
-				},
->>>>>>> bcd6806... added more ds stuff
 			},
 			Subnets: []apiv1alpha1.Subnet{
 				{

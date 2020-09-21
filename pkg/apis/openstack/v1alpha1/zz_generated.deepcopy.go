@@ -468,6 +468,11 @@ func (in *Networks) DeepCopyInto(out *Networks) {
 		*out = new(bool)
 		**out = **in
 	}
+	if in.SubnetPoolID != nil {
+		in, out := &in.SubnetPoolID, &out.SubnetPoolID
+		*out = new(string)
+		**out = **in
+	}
 	return
 }
 

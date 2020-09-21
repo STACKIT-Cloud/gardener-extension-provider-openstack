@@ -22,6 +22,9 @@ clusterName: test-namespace
 networks:
   workers: 10.250.0.0/19
   dualHomed: false
+  subnetPoolID: fff
+  serviceV6CIDR: fe80:1::/64
+  podV6CIDR: fe80::/64
 
 outputKeys:
   routerID: router_id

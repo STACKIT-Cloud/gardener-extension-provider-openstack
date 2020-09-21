@@ -83,7 +83,7 @@ resource "openstack_networking_subnet_v2" "cluster-v6" {
   dns_nameservers = []
 
   {{ if .Values.networks.subnetPoolID }}
-  subnetpool_id = {{ required "subnetPoolID must be nil or valid" .Values.networks.subnetPoolID }}
+  subnetpool_id = {{ required "subnetPoolID must be nil or valid" .Values.networks.subnetPoolID | quote }}
   {{- end}}
 }
 {{- end}}
@@ -109,7 +109,7 @@ resource "openstack_networking_subnet_v2" "services-v6" {
   dns_nameservers = []
 
   {{ if .Values.networks.subnetPoolID }}
-  subnetpool_id = {{ required "subnetPoolID must be nil or valid" .Values.networks.subnetPoolID }}
+  subnetpool_id = {{ required "subnetPoolID must be nil or valid" .Values.networks.subnetPoolID | quote }}
   {{- end}}
 }
 {{- end}}
@@ -128,7 +128,7 @@ resource "openstack_networking_subnet_v2" "pods-v6" {
   dns_nameservers = []
 
   {{ if .Values.networks.subnetPoolID }}
-  subnetpool_id = {{ required "subnetPoolID must be nil or valid" .Values.networks.subnetPoolID }}
+  subnetpool_id = {{ required "subnetPoolID must be nil or valid" .Values.networks.subnetPoolID | quote }}
   {{- end}}
 }
 {{- end}}

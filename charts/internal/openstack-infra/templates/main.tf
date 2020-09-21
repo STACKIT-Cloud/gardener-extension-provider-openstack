@@ -24,6 +24,8 @@ resource "openstack_networking_router_v2" "router" {
 }
 {{- end}}
 
+
+
 {{ if .Values.networks.dualHomed }}
 # IPv6 Network in dual homed mode
 resource "openstack_networking_network_v2" "cluster-v6" {
@@ -49,6 +51,7 @@ resource "openstack_networking_subnet_v2" "cluster-v4" {
   {{- else }}
   dns_nameservers = []
   {{- end }}
+
 }
 
 {{ if gt (len (split "," .Values.networks.workers)) 1 }}
@@ -66,8 +69,58 @@ resource "openstack_networking_subnet_v2" "cluster-v6" {
   ipv6_address_mode = "dhcpv6-stateful"
 
   dns_nameservers = []
+
+  {{ if .Values.networks.subnetPoolID }}
+  subnetpool_id = {{ required "subnetPoolID must be nil or valid" .Values.networks.subnetPoolID }}
+  {{- end}}
 }
 {{- end}}
+
+{{ if or .Values.networks.serviceV6CIDR .Values.networks.podV6CIDR }}
+resource "openstack_networking_network_v2" "pod-service-net" {
+  name           = "{{ required "clusterName is required" .Values.clusterName }}-service-pod"
+  admin_state_up = "true"
+}
+{{- end }}
+
+{{ if or .Values.networks.serviceV6CIDR }}
+## For reservation in subnet pool
+resource "openstack_networking_subnet_v2" "services-v6" {
+  name            = "{{ required "clusterName is required" .Values.clusterName }}-service-v6"
+  cidr            = "{{ required "networks.workers is required" .Values.networks.serviceV6CIDR }}"
+  network_id      = "${openstack_networking_network_v2.pod-service-net.id}"
+
+  ip_version      = 6
+  ipv6_ra_mode      = "dhcpv6-stateful"
+  ipv6_address_mode = "dhcpv6-stateful"
+
+  dns_nameservers = []
+
+  {{ if .Values.networks.subnetPoolID }}
+  subnetpool_id = {{ required "subnetPoolID must be nil or valid" .Values.networks.subnetPoolID }}
+  {{- end}}
+}
+{{- end}}
+
+{{ if or .Values.networks.podV6CIDR }}
+## For reservation in subnet pool
+resource "openstack_networking_subnet_v2" "pods-v6" {
+  name            = "{{ required "clusterName is required" .Values.clusterName }}-pod-v6"
+  cidr            = "{{ required "networks.workers is required" .Values.networks.podV6CIDR }}"
+  network_id      = "${openstack_networking_network_v2.pod-service-net.id}"
+
+  ip_version      = 6
+  ipv6_ra_mode      = "dhcpv6-stateful"
+  ipv6_address_mode = "dhcpv6-stateful"
+
+  dns_nameservers = []
+
+  {{ if .Values.networks.subnetPoolID }}
+  subnetpool_id = {{ required "subnetPoolID must be nil or valid" .Values.networks.subnetPoolID }}
+  {{- end}}
+}
+{{- end}}
+
 
 resource "openstack_networking_router_interface_v2" "router_nodes_v4" {
   router_id = "{{ required "router.id is required" $.Values.router.id }}"

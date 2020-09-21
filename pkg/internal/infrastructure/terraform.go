@@ -16,6 +16,7 @@ package infrastructure
 
 import (
 	"path/filepath"
+	"strings"
 
 	api "github.com/gardener/gardener-extension-provider-openstack/pkg/apis/openstack"
 	"github.com/gardener/gardener-extension-provider-openstack/pkg/apis/openstack/helper"
@@ -92,6 +93,16 @@ func ComputeTerraformerChartValues(
 		workersCIDR = config.Networks.Worker
 	}
 
+	serviceCidr := ""
+	if arr := strings.Split(*cluster.Shoot.Spec.Networking.Services, ","); len(arr) > 1 {
+		serviceCidr = arr[1]
+	}
+
+	podCidr := ""
+	if arr := strings.Split(*cluster.Shoot.Spec.Networking.Pods, ","); len(arr) > 1 {
+		podCidr = arr[1]
+	}
+
 	return map[string]interface{}{
 		"openstack": map[string]interface{}{
 			"authURL":          keyStoneURL,
@@ -110,8 +121,11 @@ func ComputeTerraformerChartValues(
 		},
 		"clusterName": infra.Namespace,
 		"networks": map[string]interface{}{
-			"workers":   workersCIDR,
-			"dualHomed": config.Networks.DualHomed,
+			"workers":       workersCIDR,
+			"dualHomed":     config.Networks.DualHomed,
+			"subnetPoolID":  config.Networks.SubnetPoolID,
+			"serviceV6CIDR": serviceCidr,
+			"podV6CIDR":     podCidr,
 		},
 		"outputKeys": map[string]interface{}{
 			"routerID":          TerraformOutputKeyRouterID,

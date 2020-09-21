@@ -668,6 +668,7 @@ func autoConvert_v1alpha1_Networks_To_openstack_Networks(in *Networks, out *open
 	if err := v1.Convert_Pointer_bool_To_bool(&in.DualHomed, &out.DualHomed, s); err != nil {
 		return err
 	}
+	out.SubnetPoolID = (*string)(unsafe.Pointer(in.SubnetPoolID))
 	return nil
 }
 
@@ -683,6 +684,7 @@ func autoConvert_openstack_Networks_To_v1alpha1_Networks(in *openstack.Networks,
 	if err := v1.Convert_bool_To_Pointer_bool(&in.DualHomed, &out.DualHomed, s); err != nil {
 		return err
 	}
+	out.SubnetPoolID = (*string)(unsafe.Pointer(in.SubnetPoolID))
 	return nil
 }
 

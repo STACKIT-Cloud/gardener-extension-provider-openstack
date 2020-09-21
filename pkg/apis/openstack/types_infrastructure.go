@@ -40,6 +40,8 @@ type Networks struct {
 	Workers string
 	// Decides if the nodes should have two interfaces
 	DualHomed bool
+	// SubnetPoolID
+	SubnetPoolID *string
 }
 
 // Router indicates whether to use an existing router or create a new one.

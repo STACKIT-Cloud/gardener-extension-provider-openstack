@@ -121,11 +121,12 @@ func ComputeTerraformerChartValues(
 		},
 		"clusterName": infra.Namespace,
 		"networks": map[string]interface{}{
-			"workers":       workersCIDR,
-			"dualHomed":     config.Networks.DualHomed,
-			"subnetPoolID":  config.Networks.SubnetPoolID,
-			"serviceV6CIDR": serviceCidr,
-			"podV6CIDR":     podCidr,
+			"workers":           workersCIDR,
+			"dualHomed":         config.Networks.DualHomed,
+			"subnetPoolID":      config.Networks.SubnetPoolID,
+			"serviceV6CIDR":     serviceCidr,
+			"podV6CIDR":         podCidr,
+			"externalNetworkID": config.Networks.ExternalNetworkID,
 		},
 		"outputKeys": map[string]interface{}{
 			"routerID":          TerraformOutputKeyRouterID,

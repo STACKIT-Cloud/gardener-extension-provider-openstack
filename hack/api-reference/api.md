@@ -1062,6 +1062,18 @@ string
 <p>SubnetPoolID</p>
 </td>
 </tr>
+<tr>
+<td>
+<code>externalNetworkID</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>ExternalNetworkID is the default gateway network for ipv6 network router</p>
+</td>
+</tr>
 </tbody>
 </table>
 <h3 id="openstack.provider.extensions.gardener.cloud/v1alpha1.NodeStatus">NodeStatus

@@ -24,6 +24,7 @@ networks:
   subnetPoolID: fff
   serviceV6CIDR: fe80:1::/64
   podV6CIDR: fe80::/64
+  externalNetworkID: aaaa-assdsad-dsadas
 
 outputKeys:
   routerID: router_id

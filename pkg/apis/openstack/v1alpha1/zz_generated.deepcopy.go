@@ -458,6 +458,11 @@ func (in *Networks) DeepCopyInto(out *Networks) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.ExternalNetworkID != nil {
+		in, out := &in.ExternalNetworkID, &out.ExternalNetworkID
+		*out = new(string)
+		**out = **in
+	}
 	return
 }
 

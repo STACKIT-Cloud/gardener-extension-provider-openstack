@@ -669,6 +669,7 @@ func autoConvert_v1alpha1_Networks_To_openstack_Networks(in *Networks, out *open
 		return err
 	}
 	out.SubnetPoolID = (*string)(unsafe.Pointer(in.SubnetPoolID))
+	out.ExternalNetworkID = (*string)(unsafe.Pointer(in.ExternalNetworkID))
 	return nil
 }
 
@@ -685,6 +686,7 @@ func autoConvert_openstack_Networks_To_v1alpha1_Networks(in *openstack.Networks,
 		return err
 	}
 	out.SubnetPoolID = (*string)(unsafe.Pointer(in.SubnetPoolID))
+	out.ExternalNetworkID = (*string)(unsafe.Pointer(in.ExternalNetworkID))
 	return nil
 }
 

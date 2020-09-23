@@ -46,6 +46,9 @@ type Networks struct {
 	// SubnetPoolID
 	// +optional
 	SubnetPoolID *string `json:"subnetPoolID"`
+	// ExternalNetworkID is the default gateway network for ipv6 network router
+	// +optional
+	ExternalNetworkID *string `json:"externalNetworkID"`
 }
 
 // Router indicates whether to use an existing router or create a new one.

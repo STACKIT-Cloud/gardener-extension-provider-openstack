@@ -26,16 +26,13 @@ data "openstack_networking_subnet_v2" "fip_subnet" {
 resource "openstack_networking_router_v2" "router" {
   name                = "{{ required "clusterName is required" .Values.clusterName }}"
   region              = "{{ required "openstack.region is required" .Values.openstack.region }}"
-  external_network_id = data.openstack_networking_network_v2.fip.id
-  {{ if .Values.router.floatingPoolSubnetName -}}
-  external_fixed_ip {
-    subnet_id = data.openstack_networking_subnet_v2.fip_subnet.id
-  }
+  {{ if .Values.networks.externalNetworkID }}
+  external_network_id = {{ .Values.networks.externalNetworkID | quote }}
+  {{- else }}
+  external_network_id = "${data.openstack_networking_network_v2.fip.id}"
   {{- end }}
 }
 {{- end}}
-
-
 
 {{ if .Values.networks.dualHomed }}
 # IPv6 Network in dual homed mode

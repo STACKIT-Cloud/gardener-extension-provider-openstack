@@ -44,6 +44,8 @@ type Networks struct {
 	DualHomed bool
 	// SubnetPoolID
 	SubnetPoolID *string
+	// ExternalNetworkID is the default gateway network for ipv6 network router
+	ExternalNetworkID *string
 }
 
 // Router indicates whether to use an existing router or create a new one.

@@ -139,11 +139,12 @@ func ComputeTerraformerChartValues(
 		"router":       routerConfig,
 		"clusterName":  infra.Namespace,
 		"networks": map[string]interface{}{
-			"workers":       workersCIDR,
-			"dualHomed":     config.Networks.DualHomed,
-			"subnetPoolID":  config.Networks.SubnetPoolID,
-			"serviceV6CIDR": serviceCidr,
-			"podV6CIDR":     podCidr,
+			"workers":           workersCIDR,
+			"dualHomed":         config.Networks.DualHomed,
+			"subnetPoolID":      config.Networks.SubnetPoolID,
+			"serviceV6CIDR":     serviceCidr,
+			"podV6CIDR":         podCidr,
+			"externalNetworkID": config.Networks.ExternalNetworkID,
 		},
 		"outputKeys": outputKeysConfig,
 	}, nil

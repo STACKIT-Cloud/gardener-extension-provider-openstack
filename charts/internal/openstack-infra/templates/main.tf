@@ -26,11 +26,15 @@ data "openstack_networking_subnet_v2" "fip_subnet" {
 resource "openstack_networking_router_v2" "router" {
   name                = "{{ required "clusterName is required" .Values.clusterName }}"
   region              = "{{ required "openstack.region is required" .Values.openstack.region }}"
-  {{ if .Values.networks.externalNetworkID }}
-  external_network_id = {{ .Values.networks.externalNetworkID | quote }}
-  {{- else }}
   external_network_id = "${data.openstack_networking_network_v2.fip.id}"
-  {{- end }}
+}
+{{- end}}
+
+{{ if and .Values.create.router .Values.networks.externalNetworkID }}
+resource "openstack_networking_router_v2" "router-v6" {
+  name                = "{{ required "clusterName is required" .Values.clusterName }}-v6"
+  region              = "{{ required "openstack.region is required" .Values.openstack.region }}"
+  external_network_id = {{ .Values.networks.externalNetworkID | quote }}
 }
 {{- end}}
 
@@ -138,7 +142,11 @@ resource "openstack_networking_router_interface_v2" "router_nodes_v4" {
 
 {{- if gt (len (split "," .Values.networks.workers)) 1 }}
 resource "openstack_networking_router_interface_v2" "router_nodes_v6" {
-  router_id = "${openstack_networking_router_v2.router.id}"
+  {{ if and .Values.create.router .Values.networks.externalNetworkID }}
+  router_id = "${openstack_networking_router_v2.router-v6.id}"
+  {{ else }}
+  router_id = "{{ required "router.id is required" $.Values.router.id }}"
+  {{ end }}
   subnet_id = "${openstack_networking_subnet_v2.cluster-v6.id}"
 }
 {{- end }}

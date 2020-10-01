@@ -132,13 +132,13 @@ resource "openstack_networking_subnet_v2" "pods-v6" {
 
 
 resource "openstack_networking_router_interface_v2" "router_nodes_v4" {
-  router_id = "{{ required "router.id is required" $.Values.router.id }}"
+  router_id = "${openstack_networking_router_v2.router.id}"
   subnet_id = "${openstack_networking_subnet_v2.cluster-v4.id}"
 }
 
 {{- if gt (len (split "," .Values.networks.workers)) 1 }}
 resource "openstack_networking_router_interface_v2" "router_nodes_v6" {
-  router_id = "{{ required "router.id is required" $.Values.router.id }}"
+  router_id = "${openstack_networking_router_v2.router.id}"
   subnet_id = "${openstack_networking_subnet_v2.cluster-v6.id}"
 }
 {{- end }}

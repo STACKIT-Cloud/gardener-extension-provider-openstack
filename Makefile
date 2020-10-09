@@ -15,7 +15,7 @@
 EXTENSION_PREFIX            := gardener-extension
 NAME                        := gardener-extension-provider-openstack
 VALIDATOR_NAME              := validator-openstack
-REGISTRY                    := registry.alpha.ske.eu01.stackit.cloud/gardener-ds
+REGISTRY                    := registry.ske.eu01.stackit.cloud/gardener-ds
 IMAGE_PREFIX                := $(REGISTRY)
 REPO_ROOT                   := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 HACK_DIR                    := $(REPO_ROOT)/hack

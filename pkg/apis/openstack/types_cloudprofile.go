@@ -49,6 +49,8 @@ type CloudProfileConfig struct {
 	NodeVolumeAttachLimit *int32
 	// UseOctavia specifies whether the OpenStack Octavia network load balancing is used.
 	UseOctavia *bool
+	// InternalLB determines whether or not to create an internal load balancer (no floating IP) by default.
+	InternalLB *bool
 }
 
 // Constraints is an object containing constraints for the shoots.

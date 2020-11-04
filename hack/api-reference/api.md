@@ -176,6 +176,18 @@ bool
 <p>UseOctavia specifies whether the OpenStack Octavia network load balancing is used.</p>
 </td>
 </tr>
+<tr>
+<td>
+<code>internal_lb</code></br>
+<em>
+bool
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>InternalLB determines whether or not to create an internal load balancer (no floating IP) by default.</p>
+</td>
+</tr>
 </tbody>
 </table>
 <h3 id="openstack.provider.extensions.gardener.cloud/v1alpha1.ControlPlaneConfig">ControlPlaneConfig

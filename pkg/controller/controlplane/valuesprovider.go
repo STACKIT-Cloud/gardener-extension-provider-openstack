@@ -425,6 +425,7 @@ func getConfigChartValues(
 		"subnetID":                   subnet.ID,
 		"authUrl":                    keyStoneURL,
 		"dhcpDomain":                 cloudProfileConfig.DHCPDomain,
+		"internalLB":                 cloudProfileConfig.InternalLB,
 		"requestTimeout":             cloudProfileConfig.RequestTimeout,
 		"useOctavia":                 cloudProfileConfig.UseOctavia != nil && *cloudProfileConfig.UseOctavia,
 		"rescanBlockStorageOnResize": cloudProfileConfig.RescanBlockStorageOnResize != nil && *cloudProfileConfig.RescanBlockStorageOnResize,

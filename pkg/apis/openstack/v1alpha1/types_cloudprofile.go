@@ -56,6 +56,9 @@ type CloudProfileConfig struct {
 	// UseOctavia specifies whether the OpenStack Octavia network load balancing is used.
 	// +optional
 	UseOctavia *bool `json:"useOctavia,omitempty"`
+	// InternalLB determines whether or not to create an internal load balancer (no floating IP) by default.
+	// +optional
+	InternalLB *bool `json:"internal_lb,omitempty"`
 }
 
 // Constraints is an object containing constraints for the shoots.

@@ -586,6 +586,17 @@ func getControlPlaneShootChartValues(
 	k8sVersionLessThan119 bool,
 	cloudProviderDiskConfig []byte,
 ) (map[string]interface{}, error) {
+	var httpProxy *string
+	var noProxy *string
+	if proxyConfig := cluster.Shoot.Spec.Networking.ProxyConfig; proxyConfig != nil {
+		if proxyConfig.HttpProxy != nil {
+			httpProxy = proxyConfig.HttpProxy
+		}
+		if proxyConfig.NoProxy != nil {
+			noProxy = proxyConfig.NoProxy
+		}
+	}
+
 	return map[string]interface{}{
 		openstack.CloudControllerManagerName: map[string]interface{}{"enabled": true},
 		openstack.CSINodeName: map[string]interface{}{
@@ -595,6 +606,10 @@ func getControlPlaneShootChartValues(
 				"checksum/secret-" + openstack.CloudProviderCSIDiskConfigName: checksums[openstack.CloudProviderCSIDiskConfigName],
 			},
 			"cloudProviderConfig": cloudProviderDiskConfig,
+			"proxy": map[string]interface{}{
+				"http_proxy": httpProxy,
+				"no_proxy":   noProxy,
+			},
 		},
 	}, nil
 }

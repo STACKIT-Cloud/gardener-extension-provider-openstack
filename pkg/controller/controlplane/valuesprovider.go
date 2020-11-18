@@ -521,6 +521,17 @@ func getCCMChartValues(
 	checksums map[string]string,
 	scaledDown bool,
 ) (map[string]interface{}, error) {
+	var httpProxy *string
+	var noProxy *string
+	if proxyConfig := cluster.Shoot.Spec.Networking.ProxyConfig; proxyConfig != nil {
+		if proxyConfig.HttpProxy != nil {
+			httpProxy = proxyConfig.HttpProxy
+		}
+		if proxyConfig.NoProxy != nil {
+			noProxy = proxyConfig.NoProxy
+		}
+	}
+
 	values := map[string]interface{}{
 		"enabled":           true,
 		"replicas":          extensionscontroller.GetControlPlaneReplicas(cluster, scaledDown, 1),
@@ -535,6 +546,10 @@ func getCCMChartValues(
 		},
 		"podLabels": map[string]interface{}{
 			v1beta1constants.LabelPodMaintenanceRestart: "true",
+		},
+		"proxy": map[string]interface{}{
+			"http_proxy": httpProxy,
+			"no_proxy":   noProxy,
 		},
 	}
 
@@ -560,6 +575,17 @@ func getCSIControllerChartValues(
 		return map[string]interface{}{"enabled": false}, nil
 	}
 
+	var httpProxy *string
+	var noProxy *string
+	if proxyConfig := cluster.Shoot.Spec.Networking.ProxyConfig; proxyConfig != nil {
+		if proxyConfig.HttpProxy != nil {
+			httpProxy = proxyConfig.HttpProxy
+		}
+		if proxyConfig.NoProxy != nil {
+			noProxy = proxyConfig.NoProxy
+		}
+	}
+
 	return map[string]interface{}{
 		"enabled":  true,
 		"replicas": extensionscontroller.GetControlPlaneReplicas(cluster, scaledDown, 1),
@@ -575,6 +601,10 @@ func getCSIControllerChartValues(
 			"podAnnotations": map[string]interface{}{
 				"checksum/secret-" + openstack.CSISnapshotControllerName: checksums[openstack.CSISnapshotControllerName],
 			},
+		},
+		"proxy": map[string]interface{}{
+			"http_proxy": httpProxy,
+			"no_proxy":   noProxy,
 		},
 	}, nil
 }

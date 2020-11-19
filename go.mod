@@ -38,7 +38,7 @@ require (
 )
 
 replace (
-	github.com/gardener/gardener v1.10.0 => github.com/einfachnuralex/gardener v1.10.17-ske
+	github.com/gardener/gardener v1.10.0 => github.com/einfachnuralex/gardener v1.10.18-ske
 	github.com/prometheus/client_golang => github.com/prometheus/client_golang v0.9.2
 	k8s.io/api => k8s.io/api v0.17.9
 	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.17.9

@@ -47,7 +47,17 @@ func (a *actuator) reconcile(ctx context.Context, infra *extensionsv1alpha1.Infr
 		return err
 	}
 
-	tf, err := internal.NewTerraformerWithAuth(a.RESTConfig(), infrastructure.TerraformerPurpose, infra.Namespace, infra.Name, creds)
+	additionalEnvs := make(map[string]string)
+	if cluster.Shoot.Spec.Networking.ProxyConfig != nil {
+		if cluster.Shoot.Spec.Networking.ProxyConfig.NoProxy != nil {
+			additionalEnvs["no_proxy"] = *cluster.Shoot.Spec.Networking.ProxyConfig.NoProxy
+		}
+		if cluster.Shoot.Spec.Networking.ProxyConfig.HttpProxy != nil {
+			additionalEnvs["http_proxy"] = *cluster.Shoot.Spec.Networking.ProxyConfig.HttpProxy
+		}
+	}
+
+	tf, err := internal.NewTerraformerWithAuth(a.RESTConfig(), infrastructure.TerraformerPurpose, infra.Namespace, infra.Name, creds, additionalEnvs)
 	if err != nil {
 		return err
 	}

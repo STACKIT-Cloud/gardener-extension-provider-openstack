@@ -66,11 +66,17 @@ func NewTerraformerWithAuth(
 	namespace,
 	name string,
 	creds *openstack.Credentials,
+	additionalEnvs map[string]string,
 ) (terraformer.Terraformer, error) {
 	tf, err := NewTerraformer(restConfig, purpose, namespace, name)
 	if err != nil {
 		return nil, err
 	}
 
-	return tf.SetVariablesEnvironment(TerraformerVariablesEnvironmentFromCredentials(creds)), nil
+	envs := TerraformerVariablesEnvironmentFromCredentials(creds)
+	for key, value := range additionalEnvs {
+		envs[key] = value
+	}
+
+	return tf.SetVariablesEnvironment(envs), nil
 }

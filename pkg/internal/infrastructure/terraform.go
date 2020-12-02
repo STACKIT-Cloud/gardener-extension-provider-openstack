@@ -114,13 +114,13 @@ func ComputeTerraformerChartValues(
 		workersCIDR = config.Networks.Worker
 	}
 
-	var nodesIPv6 *string
-	var nodesIPv4 *string
+	var nodesIPv6 string
+	var nodesIPv4 string
 	for _, val := range strings.Split(config.Networks.Workers, ",") {
 		if net.IsIPv6CIDRString(val) {
-			nodesIPv6 = &val
+			nodesIPv6 = val
 		} else {
-			nodesIPv4 = &val
+			nodesIPv4 = val
 		}
 	}
 

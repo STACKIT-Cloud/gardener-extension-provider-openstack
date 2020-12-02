@@ -125,13 +125,17 @@ func ComputeTerraformerChartValues(
 	}
 
 	serviceCidr := ""
-	if arr := strings.Split(*cluster.Shoot.Spec.Networking.Services, ","); len(arr) > 1 {
-		serviceCidr = arr[1]
+	for _, val := range strings.Split(*cluster.Shoot.Spec.Networking.Services, ",") {
+		if net.IsIPv6CIDRString(val) {
+			serviceCidr = val
+		}
 	}
 
 	podCidr := ""
-	if arr := strings.Split(*cluster.Shoot.Spec.Networking.Pods, ","); len(arr) > 1 {
-		podCidr = arr[1]
+	for _, val := range strings.Split(*cluster.Shoot.Spec.Networking.Pods, ",") {
+		if net.IsIPv6CIDRString(val) {
+			podCidr = val
+		}
 	}
 
 	return map[string]interface{}{

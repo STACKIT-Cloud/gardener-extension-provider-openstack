@@ -20,6 +20,8 @@ dnsServers:
 clusterName: test-namespace
 
 networks:
+  nodeIPv4: 10.250.0.0/19
+  # nodeIPv6: fe80:2::/64
   workers: 10.250.0.0/19
   dualHomed: false
   subnetPoolID: fff

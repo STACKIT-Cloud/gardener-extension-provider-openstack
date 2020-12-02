@@ -54,7 +54,7 @@ resource "openstack_networking_network_v2" "cluster" {
 resource "openstack_networking_subnet_v2" "cluster-v4" {
   name            = "{{ required "clusterName is required" .Values.clusterName }}-v4"
 
-  cidr            = "{{ required "networks.workers is required" ((split "," .Values.networks.workers)._0) }}"
+  cidr            = "{{ required "networks.workers is required" .Values.networks.nodeIPv4 }}"
 
   network_id      = openstack_networking_network_v2.cluster.id
   ip_version      = 4
@@ -67,10 +67,10 @@ resource "openstack_networking_subnet_v2" "cluster-v4" {
 
 }
 
-{{ if gt (len (split "," .Values.networks.workers)) 1 }}
+{{ if .Values.networks.nodeIPv6 }}
 resource "openstack_networking_subnet_v2" "cluster-v6" {
   name            = "{{ required "clusterName is required" .Values.clusterName }}-v6"
-  cidr            = "{{ required "networks.workers is required" (split "," .Values.networks.workers)._1 }}"
+  cidr            = "{{ required "networks.workers is required" .Values.networks.nodeIPv6 }}"
   {{ if .Values.networks.dualHomed }}
   network_id      = "${openstack_networking_network_v2.cluster-v6.id}"
   {{- else }}
@@ -140,7 +140,7 @@ resource "openstack_networking_router_interface_v2" "router_nodes_v4" {
   subnet_id = "${openstack_networking_subnet_v2.cluster-v4.id}"
 }
 
-{{- if gt (len (split "," .Values.networks.workers)) 1 }}
+{{- if .Values.networks.nodeIPv6 }}
 resource "openstack_networking_router_interface_v2" "router_nodes_v6" {
   {{ if and .Values.create.router .Values.networks.externalNetworkID }}
   router_id = "${openstack_networking_router_v2.router-v6.id}"

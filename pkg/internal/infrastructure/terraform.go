@@ -15,6 +15,7 @@
 package infrastructure
 
 import (
+	"k8s.io/utils/net"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -113,6 +114,16 @@ func ComputeTerraformerChartValues(
 		workersCIDR = config.Networks.Worker
 	}
 
+	var nodesIPv6 *string
+	var nodesIPv4 *string
+	for _, val := range strings.Split(config.Networks.Workers, ",") {
+		if net.IsIPv6CIDRString(val) {
+			nodesIPv6 = &val
+		} else {
+			nodesIPv4 = &val
+		}
+	}
+
 	serviceCidr := ""
 	if arr := strings.Split(*cluster.Shoot.Spec.Networking.Services, ","); len(arr) > 1 {
 		serviceCidr = arr[1]
@@ -140,6 +151,8 @@ func ComputeTerraformerChartValues(
 		"clusterName":  infra.Namespace,
 		"networks": map[string]interface{}{
 			"workers":           workersCIDR,
+			"nodeIPv4":          nodesIPv4,
+			"nodeIPv6":          nodesIPv6,
 			"dualHomed":         config.Networks.DualHomed,
 			"subnetPoolID":      config.Networks.SubnetPoolID,
 			"serviceV6CIDR":     serviceCidr,

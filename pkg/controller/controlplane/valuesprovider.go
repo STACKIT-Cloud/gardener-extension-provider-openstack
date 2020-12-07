@@ -627,6 +627,11 @@ func getControlPlaneShootChartValues(
 		}
 	}
 
+	resources := make(map[string]corev1.ResourceRequirements)
+	if csiDriverNode, ok := cluster.Shoot.Spec.Provider.ComponentResources["csi-driver-node"]; ok {
+		resources["driver"] = csiDriverNode
+	}
+
 	return map[string]interface{}{
 		openstack.CloudControllerManagerName: map[string]interface{}{"enabled": true},
 		openstack.CSINodeName: map[string]interface{}{
@@ -640,6 +645,7 @@ func getControlPlaneShootChartValues(
 				"http_proxy": httpProxy,
 				"no_proxy":   noProxy,
 			},
+			"resources": resources,
 		},
 	}, nil
 }

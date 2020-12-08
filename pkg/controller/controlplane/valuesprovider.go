@@ -586,6 +586,11 @@ func getControlPlaneShootChartValues(
 	k8sVersionLessThan119 bool,
 	cloudProviderDiskConfig []byte,
 ) (map[string]interface{}, error) {
+	resources := make(map[string]corev1.ResourceRequirements)
+	if csiDriverNode, ok := cluster.Shoot.Spec.Provider.ComponentResources["csi-driver-node"]; ok {
+		resources["driver"] = csiDriverNode
+	}
+
 	return map[string]interface{}{
 		openstack.CloudControllerManagerName: map[string]interface{}{"enabled": true},
 		openstack.CSINodeName: map[string]interface{}{
@@ -595,6 +600,7 @@ func getControlPlaneShootChartValues(
 				"checksum/secret-" + openstack.CloudProviderCSIDiskConfigName: checksums[openstack.CloudProviderCSIDiskConfigName],
 			},
 			"cloudProviderConfig": cloudProviderDiskConfig,
+			"resources":           resources,
 		},
 	}, nil
 }

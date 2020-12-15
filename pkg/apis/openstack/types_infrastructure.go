@@ -46,6 +46,8 @@ type Networks struct {
 	SubnetPoolID *string
 	// ExternalNetworkID is the default gateway network for ipv6 network router
 	ExternalNetworkID *string
+	// DNSServers overrides the default dns configuration from cloud profile
+	DNSServers *[]string
 }
 
 // Router indicates whether to use an existing router or create a new one.

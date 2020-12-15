@@ -52,6 +52,9 @@ type Networks struct {
 	// ExternalNetworkID is the default gateway network for ipv6 network router
 	// +optional
 	ExternalNetworkID *string `json:"externalNetworkID"`
+	// DNSServers overrides the default dns configuration from cloud profile
+	// +optional
+	DNSServers *[]string `json:"dnsServers,omitempty"`
 }
 
 // Router indicates whether to use an existing router or create a new one.

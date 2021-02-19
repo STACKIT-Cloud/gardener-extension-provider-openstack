@@ -1,6 +1,7 @@
+{{- $storageVersion := (include "storageclassversion" .) }}
 {{- range $key, $value := .Values.storageclasses }}
 ---
-apiVersion: {{ include "storageclassversion" . }}
+apiVersion: {{ $storageVersion }}
 kind: StorageClass
 metadata:
   name: {{ $value.name }}
@@ -14,6 +15,10 @@ metadata:
     {{- if $value.annotations }}
     {{- toYaml $value.annotations | nindent 4 }}
     {{- end}}
+  {{- if $value.labels }}
+  labels:
+  {{- toYaml $value.labels | nindent 4 }}
+  {{- end }}
 {{- if $value.parameters }}
 parameters:
   {{- toYaml $value.parameters | nindent 2 }}

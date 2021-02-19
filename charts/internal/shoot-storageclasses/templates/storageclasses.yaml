@@ -1,22 +1,25 @@
-{{- if not .Values.useLegacyProvisioner }}
+{{- range $key, $value := .Values.storageclasses }}
 ---
 apiVersion: {{ include "storageclassversion" . }}
 kind: StorageClass
 metadata:
-  name: default-class
+  name: {{ $value.name }}
   annotations:
-    storageclass.kubernetes.io/is-default-class: "false"
     resources.gardener.cloud/delete-on-invalid-update: "true"
-allowVolumeExpansion: true
-provisioner: cinder.csi.openstack.org
----
-apiVersion: {{ include "storageclassversion" . }}
-kind: StorageClass
-metadata:
-  name: default
-  annotations:
+    {{- if $value.default }}
     storageclass.kubernetes.io/is-default-class: "true"
-    resources.gardener.cloud/delete-on-invalid-update: "true"
+    {{- else }}
+    storageclass.kubernetes.io/is-default-class: "false"
+    {{- end }}
+    {{- if $value.annotations }}
+    {{- toYaml $value.annotations | nindent 4 }}
+    {{- end}}
+{{- if $value.parameters }}
+parameters:
+  {{- toYaml $value.parameters | nindent 2 }}
+{{- end }}
 allowVolumeExpansion: true
-provisioner: cinder.csi.openstack.org
+{{ if $value.provisioner }}provisioner: {{ $value.provisioner }}{{ end }}
+{{ if $value.reclaimPolicy }}reclaimPolicy: {{ $value.reclaimPolicy }}{{ end }}
+{{ if $value.volumeBindingMode }}volumeBindingMode: {{ $value.volumeBindingMode }}{{ end }}
 {{- end }}

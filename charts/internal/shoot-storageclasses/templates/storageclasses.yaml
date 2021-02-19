@@ -15,6 +15,10 @@ metadata:
     {{- if $value.annotations }}
     {{- toYaml $value.annotations | nindent 4 }}
     {{- end}}
+  {{- if $value.labels }}
+  labels:
+  {{- toYaml $value.labels | nindent 4 }}
+  {{- end }}
 {{- if $value.parameters }}
 parameters:
   {{- toYaml $value.parameters | nindent 2 }}

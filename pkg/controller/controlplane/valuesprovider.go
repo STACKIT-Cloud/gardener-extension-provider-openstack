@@ -47,6 +47,7 @@ import (
 	"k8s.io/apiserver/pkg/authentication/user"
 	autoscalingv1beta2 "k8s.io/autoscaler/vertical-pod-autoscaler/pkg/apis/autoscaling.k8s.io/v1beta2"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+
 )
 
 var (
@@ -381,13 +382,84 @@ func (vp *valuesProvider) GetStorageClassesChartValues(
 	cluster *extensionscontroller.Cluster,
 ) (map[string]interface{}, error) {
 	k8sVersionLessThan119, err := version.CompareVersions(cluster.Shoot.Spec.Kubernetes.Version, "<", "1.17")
+	k8sVersionLessThan112, err := version.CompareVersions(cluster.Shoot.Spec.Kubernetes.Version, "<", "1.12")
 	if err != nil {
 		return nil, err
 	}
 
-	return map[string]interface{}{
-		"useLegacyProvisioner": k8sVersionLessThan119,
-	}, nil
+	providerConfig := &api.CloudProfileConfig{}
+	if cluster.CloudProfile.Spec.ProviderConfig != nil {
+		if _, _, err := vp.Decoder().Decode(cluster.CloudProfile.Spec.ProviderConfig.Raw, nil, providerConfig); err != nil {
+			return nil, errors.Wrapf(err, "could not decode providerConfig of cloudprofile '%s'", kutil.ObjectName(cluster.CloudProfile))
+		}
+	}
+
+	values := make(map[string]interface{})
+	if providerConfig.StorageClasses != nil && len(providerConfig.StorageClasses) !=0 {
+		allSc :=  make([]map[string]interface{}, len(providerConfig.StorageClasses))
+		for i, sc := range providerConfig.StorageClasses {
+			allSc[i]["name"] = sc.Name
+			if sc.Default != nil && *sc.Default {
+				allSc[i]["default"] = true
+			}
+			if sc.Annotations != nil && len(*sc.Annotations) != 0 {
+				allSc[i]["annotations"] = sc.Annotations
+			}
+			if sc.Annotations != nil && len(*sc.Labels) != 0 {
+				allSc[i]["annotations"] = sc.Annotations
+			}
+			if sc.Parameters != nil && len(*sc.Parameters) != 0 {
+				allSc[i]["parameters"] = sc.Parameters
+			}
+			if sc.Provisioner != nil && *sc.Provisioner != "" {
+				allSc[i]["provisioner"] = sc.Provisioner
+			}else{
+				allSc[i]["provisioner"] = "cinder.csi.openstack.org"
+			}
+			if sc.ReclaimPolicy != nil && *sc.ReclaimPolicy != "" {
+				allSc[i]["reclaimPolicy"] = sc.ReclaimPolicy
+			}
+		}
+		values["storageclasses"] = allSc
+	} else {
+		bindMode := "WaitForFirstConsumer"
+		if k8sVersionLessThan112 {
+			bindMode = "Immediate"
+		}
+		if k8sVersionLessThan119 {
+			values = map[string]interface{}{
+				"storageclasses": []map[string]interface{}{{
+						"name":        "default",
+						"default":     true,
+						"provisioner": "kubernetes.io/cinder",
+						"volumeBindingMode": bindMode,
+					},
+					{
+						"name":        "default-class",
+						"provisioner": "kubernetes.io/cinder",
+						"volumeBindingMode": bindMode,
+					},
+				},
+			}
+		} else {
+			values = map[string]interface{}{
+				"storageclasses": []map[string]interface{}{{
+						"name":        "default",
+						"default":     true,
+						"provisioner": "cinder.csi.openstack.org",
+					     "volumeBindingMode": bindMode,
+					},
+					{
+						"name":        "default-class",
+						"provisioner": "cinder.csi.openstack.org",
+						"volumeBindingMode": bindMode,
+					},
+				},
+			}
+		}
+	}
+
+	return values, nil
 }
 
 // getConfigChartValues collects and returns the configuration chart values.

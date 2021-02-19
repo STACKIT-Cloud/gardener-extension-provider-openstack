@@ -1,6 +1,7 @@
+{{- $storageVersion := (include "storageclassversion" .) }}
 {{- range $key, $value := .Values.storageclasses }}
 ---
-apiVersion: {{ include "storageclassversion" . }}
+apiVersion: {{ $storageVersion }}
 kind: StorageClass
 metadata:
   name: {{ $value.name }}

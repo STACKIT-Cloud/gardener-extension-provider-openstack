@@ -394,8 +394,11 @@ func (vp *valuesProvider) GetStorageClassesChartValues(
 		}
 	}
 
+	fmt.Println("Hier koennte ihre Werbung stehen")
+	fmt.Println(providerConfig)
+
 	values := make(map[string]interface{})
-	if providerConfig.StorageClasses != nil && len(providerConfig.StorageClasses) !=0 {
+	if providerConfig.StorageClasses != nil && len(providerConfig.StorageClasses) != 0 {
 		allSc :=  make([]map[string]interface{}, len(providerConfig.StorageClasses))
 		for i, sc := range providerConfig.StorageClasses {
 			allSc[i]["name"] = sc.Name
@@ -422,9 +425,9 @@ func (vp *valuesProvider) GetStorageClassesChartValues(
 		}
 		values["storageclasses"] = allSc
 	} else {
-		bindMode := "WaitForFirstConsumer"
+		bindMode := "Immediate"
 		if k8sVersionLessThan112 {
-			bindMode = "Immediate"
+			bindMode = "WaitForFirstConsumer"
 		}
 		if k8sVersionLessThan119 {
 			values = map[string]interface{}{

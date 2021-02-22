@@ -393,7 +393,8 @@ func (vp *valuesProvider) GetStorageClassesChartValues(
 			return nil, errors.Wrapf(err, "could not decode providerConfig of cloudprofile '%s'", kutil.ObjectName(cluster.CloudProfile))
 		}
 	}
-
+	vp.logger.Error(errors.New("bla"), "providerconfig", "providerconfig", providerConfig)
+	vp.logger.Error(errors.New("bla"), "cloudprofile", "cloudprofile", cluster.CloudProfile.Spec.ProviderConfig.Object)
 	//return nil, errors.Wrapf(err, "could not decode providerConfig of cloudprofile '%v'", providerConfig)
 	//fmt.Println(providerConfig)
 

@@ -376,24 +376,24 @@ func (vp *valuesProvider) GetControlPlaneShootChartValues(
 
 // GetStorageClassesChartValues returns the values for the shoot storageclasses chart applied by the generic actuator.
 func (vp *valuesProvider) GetStorageClassesChartValues(
-	ctx context.Context,
-	_ *extensionsv1alpha1.ControlPlane,
-	cluster *extensionscontroller.Cluster,
+	_ context.Context,
+	controlPlane *extensionsv1alpha1.ControlPlane,
+	scluster *extensionscontroller.Cluster,
 ) (map[string]interface{}, error) {
 	k8sVersionLessThan119, err := version.CompareVersions(cluster.Shoot.Spec.Kubernetes.Version, "<", "1.17")
 	k8sVersionLessThan112, err := version.CompareVersions(cluster.Shoot.Spec.Kubernetes.Version, "<", "1.12")
 	if err != nil {
 		return nil, err
 	}
+
 	providerConfig := &api.CloudProfileConfig{}
-	err = vp.Client().Get(ctx,client.ObjectKey{Name: cluster.CloudProfile.Name}, cluster.CloudProfile)
-	if err != nil {
-		return nil, err
+	if controlPlane.Spec.ProviderConfig != nil {
+		if _, _, err := vp.Decoder().Decode(controlPlane.Spec.ProviderConfig.Raw, nil, providerConfig); err != nil {
+			return nil, errors.Wrapf(err, "could not decode providerConfig of controlplane '%s'", kutil.ObjectName(controlPlane))
+		}
 	}
-	providerConfig, err = helper.CloudProfileConfigFromCluster(cluster)
-	if err != nil {
-		return nil, errors.Wrapf(err, "cant get provider config from cluster for cloudprofile '%s'", kutil.ObjectName(cluster.CloudProfile))
-	}
+
+	//providerConfig, err = helper.CloudProfileConfigFromCluster(cluster)
 	//providerConfig := &api.CloudProfileConfig{}
 	//if cpconfig.Spec.ProviderConfig != nil {
 	//	if _, _, err := vp.Decoder().Decode(cluster.CloudProfile.Spec.ProviderConfig.Raw, nil, providerConfig); err != nil {
@@ -401,6 +401,7 @@ func (vp *valuesProvider) GetStorageClassesChartValues(
 	//	}
 	//}
 	vp.logger.Error(errors.New("bla"), "providerconfig", "providerconfig", providerConfig)
+	vp.logger.Error(errors.New("bla"), "providerconfig", "providerconfig", controlPlane.Spec.ProviderConfig)
 	//vp.logger.Error(errors.New("bla"), "cloudprofile", "cloudprofile", cluster.CloudProfile)
 	//return nil, errors.Wrapf(err, "could not decode providerConfig of cloudprofile '%v'", providerConfig)
 	//fmt.Println(providerConfig)

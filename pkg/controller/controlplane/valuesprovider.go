@@ -47,7 +47,6 @@ import (
 	"k8s.io/apiserver/pkg/authentication/user"
 	autoscalingv1beta2 "k8s.io/autoscaler/vertical-pod-autoscaler/pkg/apis/autoscaling.k8s.io/v1beta2"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-
 )
 
 var (
@@ -386,15 +385,19 @@ func (vp *valuesProvider) GetStorageClassesChartValues(
 	if err != nil {
 		return nil, err
 	}
-
 	providerConfig := &api.CloudProfileConfig{}
-	if cluster.CloudProfile.Spec.ProviderConfig != nil {
-		if _, _, err := vp.Decoder().Decode(cluster.CloudProfile.Spec.ProviderConfig.Raw, nil, providerConfig); err != nil {
-			return nil, errors.Wrapf(err, "could not decode providerConfig of cloudprofile '%s'", kutil.ObjectName(cluster.CloudProfile))
-		}
+	providerConfig, err = helper.CloudProfileConfigFromCluster(cluster)
+	if err != nil {
+		return nil, errors.Wrapf(err, "cant get provider config from cluster for cloudprofile '%s'", kutil.ObjectName(cluster.CloudProfile))
 	}
+	//providerConfig := &api.CloudProfileConfig{}
+	//if cpconfig.Spec.ProviderConfig != nil {
+	//	if _, _, err := vp.Decoder().Decode(cluster.CloudProfile.Spec.ProviderConfig.Raw, nil, providerConfig); err != nil {
+	//		return nil, errors.Wrapf(err, "could not decode providerConfig of cloudprofile '%s'", kutil.ObjectName(cluster.CloudProfile))
+	//	}
+	//}
 	vp.logger.Error(errors.New("bla"), "providerconfig", "providerconfig", providerConfig)
-	vp.logger.Error(errors.New("bla"), "cloudprofile", "cloudprofile", cluster.CloudProfile)
+	//vp.logger.Error(errors.New("bla"), "cloudprofile", "cloudprofile", cluster.CloudProfile)
 	//return nil, errors.Wrapf(err, "could not decode providerConfig of cloudprofile '%v'", providerConfig)
 	//fmt.Println(providerConfig)
 

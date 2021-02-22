@@ -395,10 +395,10 @@ func (vp *valuesProvider) GetStorageClassesChartValues(
 		}
 	}
 	vp.logger.Error(errors.New("bla"), "providerconfig", "providerconfig", providerConfig)
-	vp.logger.Error(errors.New("bla"), "providerconfig", "providerconfig", string(cluster.CloudProfile.Spec.ProviderConfig.Raw))
+	vp.logger.Error(errors.New("bla"), "providerconfig.raw", "providerconfig", string(cluster.CloudProfile.Spec.ProviderConfig.Raw))
 	bla, _ := json.Marshal(cluster.CloudProfile)
-	vp.logger.Error(errors.New("bla"), "providerconfig", "providerconfig", controlPlane.Spec.ProviderConfig)
-	vp.logger.Error(errors.New("bla"), "providerconfig", "providerconfig", string(bla))
+	vp.logger.Error(errors.New("bla"), "controlPlane.Spec.ProviderConfig", "providerconfig", controlPlane.Spec.ProviderConfig)
+	vp.logger.Error(errors.New("bla"), "string_bla", "providerconfig", string(bla))
 	//providerConfig, err = helper.CloudProfileConfigFromCluster(cluster)
 	//providerConfig := &api.CloudProfileConfig{}
 	//if cpconfig.Spec.ProviderConfig != nil {
@@ -407,14 +407,13 @@ func (vp *valuesProvider) GetStorageClassesChartValues(
 	//	}
 	//}
 
-
 	//vp.logger.Error(errors.New("bla"), "cloudprofile", "cloudprofile", cluster.CloudProfile)
 	//return nil, errors.Wrapf(err, "could not decode providerConfig of cloudprofile '%v'", providerConfig)
 	//fmt.Println(providerConfig)
 
 	values := make(map[string]interface{})
 	if providerConfig.StorageClasses != nil && len(providerConfig.StorageClasses) != 0 {
-		allSc :=  make([]map[string]interface{}, len(providerConfig.StorageClasses))
+		allSc := make([]map[string]interface{}, len(providerConfig.StorageClasses))
 		for i, sc := range providerConfig.StorageClasses {
 			allSc[i]["name"] = sc.Name
 			if sc.Default != nil && *sc.Default {
@@ -431,7 +430,7 @@ func (vp *valuesProvider) GetStorageClassesChartValues(
 			}
 			if sc.Provisioner != nil && *sc.Provisioner != "" {
 				allSc[i]["provisioner"] = sc.Provisioner
-			}else{
+			} else {
 				allSc[i]["provisioner"] = "cinder.csi.openstack.org"
 			}
 			if sc.ReclaimPolicy != nil && *sc.ReclaimPolicy != "" {
@@ -447,14 +446,14 @@ func (vp *valuesProvider) GetStorageClassesChartValues(
 		if k8sVersionLessThan119 {
 			values = map[string]interface{}{
 				"storageclasses": []map[string]interface{}{{
-						"name":        "default",
-						"default":     true,
-						"provisioner": "kubernetes.io/cinder",
-						"volumeBindingMode": bindMode,
-					},
+					"name":              "default",
+					"default":           true,
+					"provisioner":       "kubernetes.io/cinder",
+					"volumeBindingMode": bindMode,
+				},
 					{
-						"name":        "default-class",
-						"provisioner": "kubernetes.io/cinder",
+						"name":              "default-class",
+						"provisioner":       "kubernetes.io/cinder",
 						"volumeBindingMode": bindMode,
 					},
 				},
@@ -462,14 +461,14 @@ func (vp *valuesProvider) GetStorageClassesChartValues(
 		} else {
 			values = map[string]interface{}{
 				"storageclasses": []map[string]interface{}{{
-						"name":        "default",
-						"default":     true,
-						"provisioner": "cinder.csi.openstack.org",
-					     "volumeBindingMode": bindMode,
-					},
+					"name":              "default",
+					"default":           true,
+					"provisioner":       "cinder.csi.openstack.org",
+					"volumeBindingMode": bindMode,
+				},
 					{
-						"name":        "default-class",
-						"provisioner": "cinder.csi.openstack.org",
+						"name":              "default-class",
+						"provisioner":       "cinder.csi.openstack.org",
 						"volumeBindingMode": bindMode,
 					},
 				},

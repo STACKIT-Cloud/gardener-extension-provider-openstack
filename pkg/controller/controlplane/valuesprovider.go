@@ -16,7 +16,6 @@ package controlplane
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"path/filepath"
 	"strings"
@@ -387,16 +386,15 @@ func (vp *valuesProvider) GetStorageClassesChartValues(
 		return nil, err
 	}
 
-	providerConfig := &api.CloudProfileConfig{}
+	providerConfig := api.CloudProfileConfig{}
 
-	vp.logger.Error(errors.New("bla"), "providerconfig", "providerconfig", providerConfig)
-	json, _ := json.Marshal(cluster.CloudProfile)
-	vp.logger.Error(errors.New("bla"), "providerconfig", "providerconfig", cluster.CloudProfile.Spec.ProviderConfig.Raw)
-	vp.logger.Error(errors.New("bla"), "providerconfig", "providerconfig", string(json))
-	vp.logger.Error(errors.New("bla"), "providerconfig", "providerconfig", controlPlane.Spec.ProviderConfig)
+
 
 	if controlPlane.Spec.ProviderConfig != nil {
-		if _, _, err := vp.Decoder().Decode(controlPlane.Spec.ProviderConfig.Raw, nil, providerConfig); err != nil {
+		vp.logger.Error(errors.New("bla"), "providerconfig", "providerconfig", providerConfig)
+		vp.logger.Error(errors.New("bla"), "providerconfig", "providerconfig", string(cluster.CloudProfile.Spec.ProviderConfig.Raw))
+		vp.logger.Error(errors.New("bla"), "providerconfig", "providerconfig", controlPlane.Spec.ProviderConfig.)
+		if _, _, err := vp.Decoder().Decode(controlPlane.Spec.ProviderConfig.Raw, nil, &providerConfig); err != nil {
 			return nil, errors.Wrapf(err, "could not decode providerConfig of controlplane '%s'", kutil.ObjectName(controlPlane))
 		}
 	}

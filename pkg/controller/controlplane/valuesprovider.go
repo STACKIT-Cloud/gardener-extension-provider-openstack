@@ -394,7 +394,7 @@ func (vp *valuesProvider) GetStorageClassesChartValues(
 		}
 	}
 
-	fmt.Println("Hier koennte ihre Werbung stehen")
+	return nil, errors.Wrapf(err, "could not decode providerConfig of cloudprofile '%v'", providerConfig)
 	fmt.Println(providerConfig)
 
 	values := make(map[string]interface{})

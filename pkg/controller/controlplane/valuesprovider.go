@@ -394,8 +394,8 @@ func (vp *valuesProvider) GetStorageClassesChartValues(
 		}
 	}
 
-	return nil, errors.Wrapf(err, "could not decode providerConfig of cloudprofile '%v'", providerConfig)
-	fmt.Println(providerConfig)
+	//return nil, errors.Wrapf(err, "could not decode providerConfig of cloudprofile '%v'", providerConfig)
+	//fmt.Println(providerConfig)
 
 	values := make(map[string]interface{})
 	if providerConfig.StorageClasses != nil && len(providerConfig.StorageClasses) != 0 {

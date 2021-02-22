@@ -393,7 +393,7 @@ func (vp *valuesProvider) GetStorageClassesChartValues(
 	if controlPlane.Spec.ProviderConfig != nil {
 		vp.logger.Error(errors.New("bla"), "providerconfig", "providerconfig", providerConfig)
 		vp.logger.Error(errors.New("bla"), "providerconfig", "providerconfig", string(cluster.CloudProfile.Spec.ProviderConfig.Raw))
-		vp.logger.Error(errors.New("bla"), "providerconfig", "providerconfig", controlPlane.Spec.ProviderConfig.)
+		vp.logger.Error(errors.New("bla"), "providerconfig", "providerconfig", controlPlane.Spec.ProviderConfig)
 		if _, _, err := vp.Decoder().Decode(controlPlane.Spec.ProviderConfig.Raw, nil, &providerConfig); err != nil {
 			return nil, errors.Wrapf(err, "could not decode providerConfig of controlplane '%s'", kutil.ObjectName(controlPlane))
 		}

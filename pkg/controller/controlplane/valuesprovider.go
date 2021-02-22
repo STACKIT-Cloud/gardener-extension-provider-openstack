@@ -394,7 +394,7 @@ func (vp *valuesProvider) GetStorageClassesChartValues(
 		}
 	}
 	vp.logger.Error(errors.New("bla"), "providerconfig", "providerconfig", providerConfig)
-	vp.logger.Error(errors.New("bla"), "cloudprofile", "cloudprofile", cluster.CloudProfile.Spec.ProviderConfig.Object)
+	vp.logger.Error(errors.New("bla"), "cloudprofile", "cloudprofile", cluster.CloudProfile)
 	//return nil, errors.Wrapf(err, "could not decode providerConfig of cloudprofile '%v'", providerConfig)
 	//fmt.Println(providerConfig)
 

@@ -376,7 +376,7 @@ func (vp *valuesProvider) GetControlPlaneShootChartValues(
 
 // GetStorageClassesChartValues returns the values for the shoot storageclasses chart applied by the generic actuator.
 func (vp *valuesProvider) GetStorageClassesChartValues(
-	_ context.Context,
+	ctx context.Context,
 	_ *extensionsv1alpha1.ControlPlane,
 	cluster *extensionscontroller.Cluster,
 ) (map[string]interface{}, error) {
@@ -386,6 +386,10 @@ func (vp *valuesProvider) GetStorageClassesChartValues(
 		return nil, err
 	}
 	providerConfig := &api.CloudProfileConfig{}
+	err = vp.Client().Get(ctx,client.ObjectKey{Name: cluster.CloudProfile.Name}, cluster.CloudProfile)
+	if err != nil {
+		return nil, err
+	}
 	providerConfig, err = helper.CloudProfileConfigFromCluster(cluster)
 	if err != nil {
 		return nil, errors.Wrapf(err, "cant get provider config from cluster for cloudprofile '%s'", kutil.ObjectName(cluster.CloudProfile))

@@ -399,6 +399,7 @@ func (vp *valuesProvider) GetStorageClassesChartValues(
 	bla, _ := json.Marshal(cluster.CloudProfile)
 	vp.logger.Error(errors.New("bla"), "controlPlane.Spec.ProviderConfig", "providerconfig", controlPlane.Spec.ProviderConfig)
 	vp.logger.Error(errors.New("bla"), "string_bla", "providerconfig", string(bla))
+	vp.logger.Error(errors.New("bla"), "string_bla_count", "providerconfig", len(providerConfig.StorageClasses))
 	//providerConfig, err = helper.CloudProfileConfigFromCluster(cluster)
 	//providerConfig := &api.CloudProfileConfig{}
 	//if cpconfig.Spec.ProviderConfig != nil {

@@ -395,7 +395,7 @@ func (vp *valuesProvider) GetStorageClassesChartValues(
 		}
 	}
 	vp.logger.Error(errors.New("bla"), "providerconfig", "providerconfig", providerConfig)
-	vp.logger.Error(errors.New("bla"), "providerconfig.raw", "providerconfig", string(cluster.CloudProfile.Spec.ProviderConfig.Raw))
+	vp.logger.Error(errors.New("bla"), "storageclasses", "providerconfig", providerConfig.StorageClasses)
 	bla, _ := json.Marshal(cluster.CloudProfile)
 	vp.logger.Error(errors.New("bla"), "controlPlane.Spec.ProviderConfig", "providerconfig", controlPlane.Spec.ProviderConfig)
 	vp.logger.Error(errors.New("bla"), "string_bla", "providerconfig", string(bla))

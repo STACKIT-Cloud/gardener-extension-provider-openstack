@@ -416,6 +416,7 @@ func (vp *valuesProvider) GetStorageClassesChartValues(
 	if providerConfig.StorageClasses != nil && len(providerConfig.StorageClasses) != 0 {
 		allSc := make([]map[string]interface{}, len(providerConfig.StorageClasses))
 		for i, sc := range providerConfig.StorageClasses {
+			allSc[i] = make(map[string]interface{})
 			allSc[i]["name"] = sc.Name
 			if sc.Default != nil && *sc.Default {
 				allSc[i]["default"] = true

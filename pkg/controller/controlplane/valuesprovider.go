@@ -381,6 +381,9 @@ func (vp *valuesProvider) GetStorageClassesChartValues(
 	cluster *extensionscontroller.Cluster,
 ) (map[string]interface{}, error) {
 	k8sVersionLessThan119, err := version.CompareVersions(cluster.Shoot.Spec.Kubernetes.Version, "<", "1.17")
+	if err != nil {
+		return nil, err
+	}
 	k8sVersionLessThan112, err := version.CompareVersions(cluster.Shoot.Spec.Kubernetes.Version, "<", "1.12")
 	if err != nil {
 		return nil, err
@@ -388,28 +391,10 @@ func (vp *valuesProvider) GetStorageClassesChartValues(
 
 	providerConfig := api.CloudProfileConfig{}
 	if cluster.CloudProfile.Spec.ProviderConfig != nil {
-
 		if _, _, err := vp.Decoder().Decode(cluster.CloudProfile.Spec.ProviderConfig.Raw, nil, &providerConfig); err != nil {
 			return nil, errors.Wrapf(err, "could not decode providerConfig of controlplane '%s'", kutil.ObjectName(controlPlane))
 		}
 	}
-	//vp.logger.Error(errors.New("bla"), "providerconfig", "providerconfig", providerConfig)
-	//vp.logger.Error(errors.New("bla"), "storageclasses", "providerconfig", providerConfig.StorageClasses)
-	//bla, _ := json.Marshal(cluster.CloudProfile)
-	//vp.logger.Error(errors.New("bla"), "controlPlane.Spec.ProviderConfig", "providerconfig", controlPlane.Spec.ProviderConfig)
-	//vp.logger.Error(errors.New("bla"), "string_bla", "providerconfig", string(bla))
-	//vp.logger.Error(errors.New("bla"), "string_bla_count", "providerconfig", len(providerConfig.StorageClasses))
-	//providerConfig, err = helper.CloudProfileConfigFromCluster(cluster)
-	//providerConfig := &api.CloudProfileConfig{}
-	//if cpconfig.Spec.ProviderConfig != nil {
-	//	if _, _, err := vp.Decoder().Decode(cluster.CloudProfile.Spec.ProviderConfig.Raw, nil, providerConfig); err != nil {
-	//		return nil, errors.Wrapf(err, "could not decode providerConfig of cloudprofile '%s'", kutil.ObjectName(cluster.CloudProfile))
-	//	}
-	//}
-
-	//vp.logger.Error(errors.New("bla"), "cloudprofile", "cloudprofile", cluster.CloudProfile)
-	//return nil, errors.Wrapf(err, "could not decode providerConfig of cloudprofile '%v'", providerConfig)
-	//fmt.Println(providerConfig)
 
 	values := make(map[string]interface{})
 	if providerConfig.StorageClasses != nil && len(providerConfig.StorageClasses) != 0 {
@@ -441,10 +426,10 @@ func (vp *valuesProvider) GetStorageClassesChartValues(
 		values["storageclasses"] = allSc
 	} else {
 		bindMode := "Immediate"
-		if k8sVersionLessThan112 {
-			bindMode = "WaitForFirstConsumer"
-		}
 		if k8sVersionLessThan119 {
+			if k8sVersionLessThan112 {
+				bindMode = "WaitForFirstConsumer"
+			}
 			values = map[string]interface{}{
 				"storageclasses": []map[string]interface{}{{
 					"name":              "default",

@@ -394,12 +394,12 @@ func (vp *valuesProvider) GetStorageClassesChartValues(
 			return nil, errors.Wrapf(err, "could not decode providerConfig of controlplane '%s'", kutil.ObjectName(controlPlane))
 		}
 	}
-	vp.logger.Error(errors.New("bla"), "providerconfig", "providerconfig", providerConfig)
-	vp.logger.Error(errors.New("bla"), "storageclasses", "providerconfig", providerConfig.StorageClasses)
-	bla, _ := json.Marshal(cluster.CloudProfile)
-	vp.logger.Error(errors.New("bla"), "controlPlane.Spec.ProviderConfig", "providerconfig", controlPlane.Spec.ProviderConfig)
-	vp.logger.Error(errors.New("bla"), "string_bla", "providerconfig", string(bla))
-	vp.logger.Error(errors.New("bla"), "string_bla_count", "providerconfig", len(providerConfig.StorageClasses))
+	//vp.logger.Error(errors.New("bla"), "providerconfig", "providerconfig", providerConfig)
+	//vp.logger.Error(errors.New("bla"), "storageclasses", "providerconfig", providerConfig.StorageClasses)
+	//bla, _ := json.Marshal(cluster.CloudProfile)
+	//vp.logger.Error(errors.New("bla"), "controlPlane.Spec.ProviderConfig", "providerconfig", controlPlane.Spec.ProviderConfig)
+	//vp.logger.Error(errors.New("bla"), "string_bla", "providerconfig", string(bla))
+	//vp.logger.Error(errors.New("bla"), "string_bla_count", "providerconfig", len(providerConfig.StorageClasses))
 	//providerConfig, err = helper.CloudProfileConfigFromCluster(cluster)
 	//providerConfig := &api.CloudProfileConfig{}
 	//if cpconfig.Spec.ProviderConfig != nil {

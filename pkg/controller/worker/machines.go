@@ -187,6 +187,10 @@ func (w *workerDelegate) generateMachineConfig(ctx context.Context) error {
 				machineClassSpec["rootDiskSize"] = volumeSize
 			}
 
+			if pool.Volume.Type != nil {
+				machineClassSpec["volumeType"] = pool.Volume.Type
+			}
+
 			if machineImage.ID != "" {
 				machineClassSpec["imageID"] = machineImage.ID
 

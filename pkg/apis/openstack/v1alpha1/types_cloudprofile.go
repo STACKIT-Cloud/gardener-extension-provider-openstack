@@ -56,6 +56,9 @@ type CloudProfileConfig struct {
 	// UseOctavia specifies whether the OpenStack Octavia network load balancing is used.
 	// +optional
 	UseOctavia *bool `json:"useOctavia,omitempty"`
+	// UseYAWOL specifies whether the YAWOL load balancing is used. ignored if UseOctavia is true
+	// +optional
+	UseYAWOL *bool `json:"useYAWOL,omitempty"`
 	// InternalLB determines whether or not to create an internal load balancer (no floating IP) by default.
 	// +optional
 	InternalLB *bool `json:"internal_lb,omitempty"`

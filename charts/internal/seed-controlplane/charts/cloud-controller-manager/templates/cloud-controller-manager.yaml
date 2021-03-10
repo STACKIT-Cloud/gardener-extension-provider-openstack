@@ -44,6 +44,9 @@ spec:
         - /hyperkube
         - cloud-controller-manager
         {{- end}}
+        {{- if .Values.controllers }}
+        - --controllers="{{ .Values.controllers }}"
+        {{- else }}
         - --allocate-node-cidrs=true
         - --cloud-provider=openstack
         - --cloud-config=/etc/kubernetes/cloudprovider/cloudprovider.conf

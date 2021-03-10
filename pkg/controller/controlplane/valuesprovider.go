@@ -321,6 +321,14 @@ func (vp *valuesProvider) GetControlPlaneChartValues(
 		}
 	}
 
+	// Decode cloudprofileConfig
+	cloudProfileConfig := &api.CloudProfileConfig{}
+	if cluster.CloudProfile.Spec.ProviderConfig != nil {
+		if _, _, err := vp.Decoder().Decode(cluster.CloudProfile.Spec.ProviderConfig.Raw, nil, cloudProfileConfig); err != nil {
+			return nil, errors.Wrapf(err, "could not decode cloudProfileConfig of cluster.CloudProfile '%s'", kutil.ObjectName(cluster.CloudProfile))
+		}
+	}
+
 	cpConfigSecret := &corev1.Secret{}
 	if err := vp.Client().Get(ctx, kutil.Key(cp.Namespace, openstack.CloudProviderConfigName), cpConfigSecret); err != nil {
 		return nil, err
@@ -345,7 +353,7 @@ func (vp *valuesProvider) GetControlPlaneChartValues(
 		return nil, err
 	}
 
-	return getControlPlaneChartValues(cpConfig, cp, cluster, checksums, scaledDown)
+	return getControlPlaneChartValues(cpConfig, cp, cluster, cloudProfileConfig, checksums, scaledDown)
 }
 
 // GetControlPlaneShootChartValues returns the values for the control plane shoot chart applied by the generic actuator.
@@ -569,10 +577,11 @@ func getControlPlaneChartValues(
 	cpConfig *api.ControlPlaneConfig,
 	cp *extensionsv1alpha1.ControlPlane,
 	cluster *extensionscontroller.Cluster,
+	cloudprofileConfig *api.CloudProfileConfig,
 	checksums map[string]string,
 	scaledDown bool,
 ) (map[string]interface{}, error) {
-	ccm, err := getCCMChartValues(cpConfig, cp, cluster, checksums, scaledDown)
+	ccm, err := getCCMChartValues(cpConfig, cp, cluster, cloudprofileConfig, checksums, scaledDown)
 	if err != nil {
 		return nil, err
 	}
@@ -593,6 +602,7 @@ func getCCMChartValues(
 	cpConfig *api.ControlPlaneConfig,
 	cp *extensionsv1alpha1.ControlPlane,
 	cluster *extensionscontroller.Cluster,
+	cloudprofileConfig *api.CloudProfileConfig,
 	checksums map[string]string,
 	scaledDown bool,
 ) (map[string]interface{}, error) {
@@ -626,6 +636,13 @@ func getCCMChartValues(
 			"http_proxy": httpProxy,
 			"no_proxy":   noProxy,
 		},
+	}
+
+	// disable service controller if yawol is enabled and useOctavia is not true
+	if cloudprofileConfig.UseYAWOL != nil && *cloudprofileConfig.UseYAWOL {
+		if !(cloudprofileConfig.UseYAWOL != nil && *cloudprofileConfig.UseYAWOL) {
+			values["controllers"] = "\"-service\""
+		}
 	}
 
 	if cpConfig.CloudControllerManager != nil {

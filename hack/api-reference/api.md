@@ -178,6 +178,18 @@ bool
 </tr>
 <tr>
 <td>
+<code>useYAWOL</code></br>
+<em>
+bool
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>UseYAWOL specifies whether the YAWOL load balancing is used. ignored if UseOctavia is true</p>
+</td>
+</tr>
+<tr>
+<td>
 <code>internal_lb</code></br>
 <em>
 bool

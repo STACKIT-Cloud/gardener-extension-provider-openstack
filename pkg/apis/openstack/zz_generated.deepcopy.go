@@ -94,6 +94,11 @@ func (in *CloudProfileConfig) DeepCopyInto(out *CloudProfileConfig) {
 		*out = new(bool)
 		**out = **in
 	}
+	if in.UseYAWOL != nil {
+		in, out := &in.UseYAWOL, &out.UseYAWOL
+		*out = new(bool)
+		**out = **in
+	}
 	if in.InternalLB != nil {
 		in, out := &in.InternalLB, &out.InternalLB
 		*out = new(bool)

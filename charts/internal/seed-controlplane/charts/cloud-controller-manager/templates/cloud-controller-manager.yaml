@@ -46,7 +46,7 @@ spec:
         {{- end}}
         {{- if .Values.controllers }}
         - --controllers={{ .Values.controllers }}
-        {{- else }}
+        {{- end }}
         - --allocate-node-cidrs=true
         - --cloud-provider=openstack
         - --cloud-config=/etc/kubernetes/cloudprovider/cloudprovider.conf

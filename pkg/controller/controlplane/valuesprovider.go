@@ -640,7 +640,7 @@ func getCCMChartValues(
 
 	// disable service controller if yawol is enabled and useOctavia is not true
 	if cloudprofileConfig.UseYAWOL != nil && *cloudprofileConfig.UseYAWOL {
-		if !(cloudprofileConfig.UseYAWOL != nil && *cloudprofileConfig.UseYAWOL) {
+		if !(cloudprofileConfig.UseOctavia != nil && *cloudprofileConfig.UseOctavia) {
 			values["controllers"] = "\"-service\""
 		}
 	}

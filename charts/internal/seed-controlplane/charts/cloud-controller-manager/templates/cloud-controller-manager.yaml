@@ -45,7 +45,7 @@ spec:
         - cloud-controller-manager
         {{- end}}
         {{- if .Values.controllers }}
-        - --controllers="{{ .Values.controllers }}"
+        - --controllers={{ .Values.controllers }}
         {{- else }}
         - --allocate-node-cidrs=true
         - --cloud-provider=openstack

@@ -739,24 +739,20 @@ func getYawolChartValues(
 			"enabled":           false,
 		}, nil
 	}
-	subnet, err := helper.FindSubnetByPurpose(infraStatus.Networks.Subnets, api.PurposeNodes)
-	if err != nil {
-		return nil, errors.Wrapf(err, "could not determine subnet from infrastructureProviderStatus of controlplane '%s'", kutil.ObjectName(cp))
-	}
+
 	values := map[string]interface{}{
 		"enabled":           true,
 		"replicas":          extensionscontroller.GetControlPlaneReplicas(cluster, scaledDown, 1),
 		"yawolNamespace":       cp.Namespace,
 		"yawolOSSecretName": "subnet",
 		"yawolFloatingID": infraStatus.Networks.FloatingPool.ID,
-		"yawolNetworkID": subnet,
+		"yawolNetworkID": infraStatus.Networks.ID,
 		"yawolFlavorID": cloudprofileConfig.YAWOLFlavorID,
 		"yawolImageID": cloudprofileConfig.YAWOLFlavorID,
 		"podLabels": map[string]interface{}{
 			v1beta1constants.LabelPodMaintenanceRestart: "true",
 		},
 	}
-
 
 	return values, nil
 }

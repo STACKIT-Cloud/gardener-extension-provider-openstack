@@ -591,9 +591,15 @@ func getControlPlaneChartValues(
 		return nil, err
 	}
 
+	yawol, err := getYawolChartValues(cpConfig, cp, cluster, cloudprofileConfig, checksums, scaledDown)
+	if err != nil {
+		return nil, err
+	}
+
 	return map[string]interface{}{
 		openstack.CloudControllerManagerName: ccm,
 		openstack.CSIControllerName:          csi,
+		openstack.YAWOLCloudControllerName:          yawol,
 	}, nil
 }
 
@@ -699,6 +705,42 @@ func getCSIControllerChartValues(
 			"no_proxy":   noProxy,
 		},
 	}, nil
+}
+
+// getYawolChartValues collects and returns the yawol controller chart values.
+func getYawolChartValues(
+	cpConfig *api.ControlPlaneConfig,
+	cp *extensionsv1alpha1.ControlPlane,
+	cluster *extensionscontroller.Cluster,
+	cloudprofileConfig *api.CloudProfileConfig,
+	checksums map[string]string,
+	scaledDown bool,
+) (map[string]interface{}, error) {
+
+	// disable yawol service controller if yawol is disables or useOctavia is true
+	if (cloudprofileConfig.UseOctavia != nil && *cloudprofileConfig.UseOctavia)  ||
+		cloudprofileConfig.UseYAWOL == nil || !*cloudprofileConfig.UseYAWOL {
+		return map[string]interface{}{
+			"enabled":           false,
+		}, nil
+	}
+
+	values := map[string]interface{}{
+		"enabled":           true,
+		"replicas":          extensionscontroller.GetControlPlaneReplicas(cluster, scaledDown, 1),
+		"yawolNamespace":       cp.Namespace,
+		"yawolOSSecretName": cloudprofileConfig.UseYAWOL,
+		"yawolFloatingID": cloudprofileConfig.UseYAWOL,
+		"yawolNetworkID": cloudprofileConfig.UseYAWOL,
+		"yawolFlavorID": cloudprofileConfig.UseYAWOL,
+		"yawolImageID": cloudprofileConfig.UseYAWOL,
+		"podLabels": map[string]interface{}{
+			v1beta1constants.LabelPodMaintenanceRestart: "true",
+		},
+	}
+
+
+	return values, nil
 }
 
 // getControlPlaneShootChartValues collects and returns the control plane shoot chart values.

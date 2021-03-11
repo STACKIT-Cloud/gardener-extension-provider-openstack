@@ -23,6 +23,11 @@ images:
   repository: registry.alpha.ske.eu01.stackit.cloud/gardener-ds/machine-controller-manager
   tag: "v0.31.14"
 
+- name: yawol-cloud-controller
+  sourceRepository: github.com/stackitcloud/yawol-cloud-controller
+  repository: registry.ske.eu01.stackit.cloud/yawol/yawol-cloud-controller
+  tag: "v0.1.0"
+
 - name: csi-driver-cinder
   sourceRepository: github.com/kubernetes/cloud-provider-openstack
   repository: docker.io/k8scloudprovider/cinder-csi-plugin

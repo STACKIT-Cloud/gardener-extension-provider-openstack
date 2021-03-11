@@ -26,6 +26,8 @@ const (
 
 	// CloudControllerManagerImageName is the name of the cloud-controller-manager image.
 	CloudControllerManagerImageName = "cloud-controller-manager"
+	// CloudControllerManagerImageName is the name of the cloud-controller-manager image.
+	YawolCloudControllerImageName = "yawol-cloud-controller"
 	// CSIDriverCinderImageName is the name of the csi-driver-cinder image.
 	CSIDriverCinderImageName = "csi-driver-cinder"
 	// CSIProvisionerImageName is the name of the csi-provisioner image.

@@ -170,6 +170,11 @@ var (
 				},
 			},
 			{
+				Name:   openstack.YAWOLCloudControllerName,
+				Images: []string{openstack.YawolCloudControllerImageName},
+				Objects: []*chart.Object{},
+			},
+			{
 				Name: openstack.CSIControllerName,
 				Images: []string{
 					openstack.CSIDriverCinderImageName,

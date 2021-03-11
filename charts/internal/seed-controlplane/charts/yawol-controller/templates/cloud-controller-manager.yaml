@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cloud-controller-manager
+  name: yawol-cloud-controller
   namespace: {{ .Release.Namespace }}
   labels:
     garden.sapcloud.io/role: controlplane

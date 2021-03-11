@@ -39,7 +39,7 @@ spec:
         imagePullPolicy: IfNotPresent
         command:
         - /bin/yawol-cloud-controller
-        - -kubeconfig=/var/lib/cloud-controller-manager/kubeconfig
+        - -target-kubeconfig=/var/lib/cloud-controller-manager/kubeconfig
         env:
         {{- if .Values.yawolNamespace }}
         - name: CLUSTER_NAMESPACE
@@ -58,11 +58,11 @@ spec:
           value: {{ .Values.yawolNetworkID }}
         {{- end }}
         {{- if .Values.yawolFlavorID }}
-        - name: EnvFlavorID
+        - name: FLAVOR_ID
           value: {{ .Values.yawolFlavorID }}
         {{- end }}
         {{- if .Values.yawolImageID }}
-        - name: EnvImageID
+        - name: IMAGE_ID
           value: {{ .Values.yawolImageID }}
         {{- end }}
         {{- if .Values.resources }}

@@ -190,6 +190,30 @@ bool
 </tr>
 <tr>
 <td>
+<code>yawolImageID</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>YAWOLImageID specifies the openstack image for yawollet. Must set if UseYAWOL is set</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>yawolFlavorID</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>YAWOLFlavorID specifies the openstack flavor for yawollet. Must set if UseYAWOL is set</p>
+</td>
+</tr>
+<tr>
+<td>
 <code>internal_lb</code></br>
 <em>
 bool

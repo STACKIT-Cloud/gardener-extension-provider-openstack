@@ -172,7 +172,9 @@ var (
 			{
 				Name:   openstack.YAWOLCloudControllerName,
 				Images: []string{openstack.YawolCloudControllerImageName},
-				Objects: []*chart.Object{},
+				Objects: []*chart.Object{
+					{Type: &appsv1.Deployment{}, Name: openstack.YAWOLCloudControllerName},
+				},
 			},
 			{
 				Name: openstack.CSIControllerName,
@@ -326,6 +328,12 @@ func (vp *valuesProvider) GetControlPlaneChartValues(
 		}
 	}
 
+	// Decode InfrastructureStatus
+	infraStatus := &api.InfrastructureStatus{}
+	if _, _, err := vp.Decoder().Decode(cp.Spec.InfrastructureProviderStatus.Raw, nil, infraStatus); err != nil {
+		return nil, errors.Wrapf(err, "could not decode infrastructureProviderStatus of controlplane '%s'", kutil.ObjectName(cp))
+	}
+
 	// Decode cloudprofileConfig
 	cloudProfileConfig := &api.CloudProfileConfig{}
 	if cluster.CloudProfile.Spec.ProviderConfig != nil {
@@ -358,7 +366,7 @@ func (vp *valuesProvider) GetControlPlaneChartValues(
 		return nil, err
 	}
 
-	return getControlPlaneChartValues(cpConfig, cp, cluster, cloudProfileConfig, checksums, scaledDown)
+	return getControlPlaneChartValues(cpConfig, cp, cluster, cloudProfileConfig, infraStatus, checksums, scaledDown)
 }
 
 // GetControlPlaneShootChartValues returns the values for the control plane shoot chart applied by the generic actuator.
@@ -583,6 +591,7 @@ func getControlPlaneChartValues(
 	cp *extensionsv1alpha1.ControlPlane,
 	cluster *extensionscontroller.Cluster,
 	cloudprofileConfig *api.CloudProfileConfig,
+	infraStatus *api.InfrastructureStatus,
 	checksums map[string]string,
 	scaledDown bool,
 ) (map[string]interface{}, error) {
@@ -596,7 +605,7 @@ func getControlPlaneChartValues(
 		return nil, err
 	}
 
-	yawol, err := getYawolChartValues(cpConfig, cp, cluster, cloudprofileConfig, checksums, scaledDown)
+	yawol, err := getYawolChartValues(cpConfig, cp, cluster, cloudprofileConfig, infraStatus, checksums, scaledDown)
 	if err != nil {
 		return nil, err
 	}
@@ -718,7 +727,8 @@ func getYawolChartValues(
 	cp *extensionsv1alpha1.ControlPlane,
 	cluster *extensionscontroller.Cluster,
 	cloudprofileConfig *api.CloudProfileConfig,
-	checksums map[string]string,
+	infraStatus *api.InfrastructureStatus,
+    checksums map[string]string,
 	scaledDown bool,
 ) (map[string]interface{}, error) {
 
@@ -729,16 +739,19 @@ func getYawolChartValues(
 			"enabled":           false,
 		}, nil
 	}
-
+	subnet, err := helper.FindSubnetByPurpose(infraStatus.Networks.Subnets, api.PurposeNodes)
+	if err != nil {
+		return nil, errors.Wrapf(err, "could not determine subnet from infrastructureProviderStatus of controlplane '%s'", kutil.ObjectName(cp))
+	}
 	values := map[string]interface{}{
 		"enabled":           true,
 		"replicas":          extensionscontroller.GetControlPlaneReplicas(cluster, scaledDown, 1),
 		"yawolNamespace":       cp.Namespace,
-		"yawolOSSecretName": cp.Namespace,
-		"yawolFloatingID": cp.Namespace,
-		"yawolNetworkID": cp.Namespace,
-		"yawolFlavorID": cp.Namespace,
-		"yawolImageID": cp.Namespace,
+		"yawolOSSecretName": "subnet",
+		"yawolFloatingID": infraStatus.Networks.FloatingPool.ID,
+		"yawolNetworkID": subnet,
+		"yawolFlavorID": cloudprofileConfig.YAWOLFlavorID,
+		"yawolImageID": cloudprofileConfig.YAWOLFlavorID,
 		"podLabels": map[string]interface{}{
 			v1beta1constants.LabelPodMaintenanceRestart: "true",
 		},

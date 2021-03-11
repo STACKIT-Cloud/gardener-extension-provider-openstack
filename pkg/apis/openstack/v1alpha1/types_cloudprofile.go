@@ -59,6 +59,12 @@ type CloudProfileConfig struct {
 	// UseYAWOL specifies whether the YAWOL load balancing is used. ignored if UseOctavia is true
 	// +optional
 	UseYAWOL *bool `json:"useYAWOL,omitempty"`
+	// YAWOLImageID specifies the openstack image for yawollet. Must set if UseYAWOL is set
+	// +optional
+	YAWOLImageID *string `json:"yawolImageID,omitempty"`
+	// YAWOLFlavorID specifies the openstack flavor for yawollet. Must set if UseYAWOL is set
+	// +optional
+	YAWOLFlavorID *string `json:"yawolFlavorID,omitempty"`
 	// InternalLB determines whether or not to create an internal load balancer (no floating IP) by default.
 	// +optional
 	InternalLB *bool `json:"internal_lb,omitempty"`

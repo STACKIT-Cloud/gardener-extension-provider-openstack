@@ -17,9 +17,9 @@ resources:
   limits:
     cpu: 500m
     memory: 512Mi
-yawolNamespace: foo-bar
-yawolOSSecretName: cloud-provider-config
-yawolFloatingID: foo-bar
-yawolNetworkID: foo-bar
-yawolFlavorID: foo-bar
-yawolImageID: foo-bar
+#yawolNamespace: foo-bar
+#yawolOSSecretName: cloud-provider-config
+#yawolFloatingID: foo-bar
+#yawolNetworkID: foo-bar
+#yawolFlavorID: foo-bar
+#yawolImageID: foo-bar

@@ -754,7 +754,7 @@ func getYawolChartValues(
 		}, nil
 	}
 	ls := strings.TrimPrefix(cluster.Seed.Spec.DNS.IngressDomain, "i.")
-	la := "api." + ls
+	la := "https://api." + ls
 
 	values := map[string]interface{}{
 		"enabled":           true,

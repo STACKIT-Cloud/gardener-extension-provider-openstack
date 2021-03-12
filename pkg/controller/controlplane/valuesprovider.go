@@ -175,7 +175,7 @@ var (
 				Objects: []*chart.Object{
 					{Type: &appsv1.Deployment{}, Name: openstack.YAWOLCloudControllerName},
 					{Type: &corev1.ServiceAccount{}, Name: openstack.YAWOLCloudControllerName},
-					{Type: &autoscalingv1beta2.VerticalPodAutoscaler{}, Name: openstack.CSIControllerName + "-vpa"},
+					{Type: &autoscalingv1beta2.VerticalPodAutoscaler{}, Name: openstack.YAWOLCloudControllerName + "-vpa"},
 				},
 			},
 			{

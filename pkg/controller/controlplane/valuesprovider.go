@@ -758,7 +758,7 @@ func getYawolChartValues(
 		"enabled":           true,
 		"replicas":          extensionscontroller.GetControlPlaneReplicas(cluster, scaledDown, 1),
 		"yawolNamespace":    cp.Namespace,
-		"yawolOSSecretName": "subnet",
+		"yawolOSSecretName": "cloud-provider-config",
 		"yawolFloatingID":   infraStatus.Networks.FloatingPool.ID,
 		"yawolNetworkID":    infraStatus.Networks.ID,
 		"yawolFlavorID":     cloudprofileConfig.YAWOLFlavorID,

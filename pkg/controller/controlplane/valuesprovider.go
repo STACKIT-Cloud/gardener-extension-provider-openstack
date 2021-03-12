@@ -753,6 +753,8 @@ func getYawolChartValues(
 			"enabled": false,
 		}, nil
 	}
+	ls := strings.TrimPrefix(cluster.Seed.Spec.DNS.IngressDomain, "i.")
+	la := "api." + ls
 
 	values := map[string]interface{}{
 		"enabled":           true,
@@ -763,6 +765,7 @@ func getYawolChartValues(
 		"yawolNetworkID":    infraStatus.Networks.ID,
 		"yawolFlavorID":     cloudprofileConfig.YAWOLFlavorID,
 		"yawolImageID":      cloudprofileConfig.YAWOLImageID,
+		"yawolAPIHost":      la,
 		"podLabels": map[string]interface{}{
 			v1beta1constants.LabelPodMaintenanceRestart: "true",
 		},

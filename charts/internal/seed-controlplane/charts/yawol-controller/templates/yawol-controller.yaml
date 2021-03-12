@@ -45,4 +45,8 @@ spec:
           - name: CLUSTER_NAMESPACE
             value: {{ .Values.yawolNamespace }}
           {{- end }}
+            {{- if .Values.yawolAPIHost }}
+          - name: API_ENDPOINT
+            value: {{ .Values.yawolAPIHost }}
+          {{- end }}
       restartPolicy: Always

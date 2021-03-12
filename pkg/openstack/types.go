@@ -26,8 +26,10 @@ const (
 
 	// CloudControllerManagerImageName is the name of the cloud-controller-manager image.
 	CloudControllerManagerImageName = "cloud-controller-manager"
-	// CloudControllerManagerImageName is the name of the cloud-controller-manager image.
-	YawolCloudControllerImageName = "yawol-cloud-controller"
+	// YAWOLControllerImageName is the name of the cloud-controller-manager image.
+	YAWOLControllerImageName = "yawol-controller"
+	// YAWOLCloudControllerImageName
+	YAWOLCloudControllerImageName = "yawol-cloud-controller"
 	// CSIDriverCinderImageName is the name of the csi-driver-cinder image.
 	CSIDriverCinderImageName = "csi-driver-cinder"
 	// CSIProvisionerImageName is the name of the csi-provisioner image.
@@ -72,8 +74,10 @@ const (
 	CloudControllerManagerName = "cloud-controller-manager"
 	// CSIControllerName is a constant for the chart name for a CSI controller deployment in the seed.
 	CSIControllerName = "csi-driver-controller"
-	// CSIControllerName is a constant for the chart name for a CSI controller deployment in the seed.
-	YAWOLCloudControllerName = "yawol-controller"
+	// YAWOLControllerName is a constant for the chart name for a CSI controller deployment in the seed.
+	YAWOLControllerName = "yawol-controller"
+	// YAWOLCloudControllerName
+	YAWOLCloudControllerName = "yawol-cloud-controller"
 	// CSIControllerCinderName is a constant for the name of the Cinder CSI controller deployment in the seed.
 	CSIControllerCinderName = "csi-driver-controller-cinder"
 	// CSINodeName is a constant for the chart name for a CSI node deployment in the shoot.

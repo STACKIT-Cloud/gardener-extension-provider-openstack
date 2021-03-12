@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: yawol-controller
+  name: yawol-cloud-controller
   namespace: {{ .Release.Namespace }}
   labels:
     garden.sapcloud.io/role: controlplane
     app: kubernetes
-    role: yawol-controller
+    role: yawol-cloud-controller
 spec:
   revisionHistoryLimit: 0
   replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
       app: kubernetes
-      role: yawol-controller
+      role: yawol-cloud-controller
   template:
     metadata:
 {{- if .Values.podAnnotations }}
@@ -23,7 +23,7 @@ spec:
       labels:
         garden.sapcloud.io/role: controlplane
         app: kubernetes
-        role: yawol-controller
+        role: yawol-cloud-controller
         networking.gardener.cloud/to-dns: allowed
         networking.gardener.cloud/to-public-networks: allowed
         networking.gardener.cloud/to-private-networks: allowed
@@ -33,6 +33,7 @@ spec:
 {{ toYaml .Values.podLabels | indent 8 }}
 {{- end }}
     spec:
+      serviceAccountName: yawol-cloud-controller
       containers:
       - name: yawol-cloud-controller
         image: {{ index .Values.images "yawol-cloud-controller" }}
@@ -74,8 +75,6 @@ spec:
           mountPath: /var/lib/cloud-controller-manager
       dnsPolicy: ClusterFirst
       restartPolicy: Always
-      schedulerName: default-scheduler
-      terminationGracePeriodSeconds: 30
       volumes:
       - name: cloud-controller-manager
         secret:

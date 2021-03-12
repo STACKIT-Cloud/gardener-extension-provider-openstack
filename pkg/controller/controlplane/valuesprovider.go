@@ -170,8 +170,8 @@ var (
 				},
 			},
 			{
-				Name:   openstack.YAWOLCloudControllerName,
-				Images: []string{openstack.YawolCloudControllerImageName},
+				Name:   openstack.YAWOLControllerName,
+				Images: []string{openstack.YAWOLCloudControllerImageName},
 				Objects: []*chart.Object{
 					{Type: &appsv1.Deployment{}, Name: openstack.YAWOLCloudControllerName},
 					{Type: &corev1.ServiceAccount{}, Name: openstack.YAWOLCloudControllerName},

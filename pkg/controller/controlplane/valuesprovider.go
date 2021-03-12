@@ -617,7 +617,7 @@ func getControlPlaneChartValues(
 	return map[string]interface{}{
 		openstack.CloudControllerManagerName: ccm,
 		openstack.CSIControllerName:          csi,
-		openstack.YAWOLCloudControllerName:   yawol,
+		openstack.YAWOLControllerName:        yawol,
 	}, nil
 }
 

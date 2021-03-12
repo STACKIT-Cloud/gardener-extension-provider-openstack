@@ -40,4 +40,9 @@ spec:
           imagePullPolicy: Always
           command:
             - /bin/yawol-controller
+          env:
+          {{- if .Values.yawolNamespace }}
+          - name: CLUSTER_NAMESPACE
+            value: {{ .Values.yawolNamespace }}
+          {{- end }}
       restartPolicy: Always

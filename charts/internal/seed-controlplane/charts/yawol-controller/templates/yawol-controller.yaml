@@ -16,10 +16,10 @@ spec:
       role: yawol-controller
   template:
     metadata:
-      {{- if .Values.podAnnotations }}
+{{- if .Values.podAnnotations }}
       annotations:
-      {{ toYaml .Values.podAnnotations | indent 8 }}
-      {{- end }}
+{{ toYaml .Values.podAnnotations | indent 8 }}
+{{- end }}
       labels:
         garden.sapcloud.io/role: controlplane
         app: kubernetes
@@ -29,9 +29,9 @@ spec:
         networking.gardener.cloud/to-private-networks: allowed
         networking.gardener.cloud/to-shoot-apiserver: allowed
         networking.gardener.cloud/from-prometheus: allowed
-    {{- if .Values.podLabels }}
-    {{ toYaml .Values.podLabels | indent 8 }}
-    {{- end }}
+{{- if .Values.podLabels }}
+{{ toYaml .Values.podLabels | indent 8 }}
+{{- end }}
     spec:
       serviceAccountName: yawol-controller
       containers:

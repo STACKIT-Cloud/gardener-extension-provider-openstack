@@ -1,12 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: yawol-cloud-controller
+  name: yawol-controller
   namespace: {{ .Release.Namespace }}
   labels:
     garden.sapcloud.io/role: controlplane
     app: kubernetes
-    role: cloud-controller-manager
+    role: yawol-controller
 spec:
   revisionHistoryLimit: 0
   replicas: {{ .Values.replicas }}

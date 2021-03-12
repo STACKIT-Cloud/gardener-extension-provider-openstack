@@ -174,6 +174,8 @@ var (
 				Images: []string{openstack.YawolCloudControllerImageName},
 				Objects: []*chart.Object{
 					{Type: &appsv1.Deployment{}, Name: openstack.YAWOLCloudControllerName},
+					{Type: &corev1.ServiceAccount{}, Name: openstack.YAWOLCloudControllerName},
+					{Type: &autoscalingv1beta2.VerticalPodAutoscaler{}, Name: openstack.CSIControllerName + "-vpa"},
 				},
 			},
 			{
@@ -613,7 +615,7 @@ func getControlPlaneChartValues(
 	return map[string]interface{}{
 		openstack.CloudControllerManagerName: ccm,
 		openstack.CSIControllerName:          csi,
-		openstack.YAWOLCloudControllerName:          yawol,
+		openstack.YAWOLCloudControllerName:   yawol,
 	}, nil
 }
 
@@ -728,27 +730,27 @@ func getYawolChartValues(
 	cluster *extensionscontroller.Cluster,
 	cloudprofileConfig *api.CloudProfileConfig,
 	infraStatus *api.InfrastructureStatus,
-    checksums map[string]string,
+	checksums map[string]string,
 	scaledDown bool,
 ) (map[string]interface{}, error) {
 
 	// disable yawol service controller if yawol is disables or useOctavia is true
-	if (cloudprofileConfig.UseOctavia != nil && *cloudprofileConfig.UseOctavia)  ||
+	if (cloudprofileConfig.UseOctavia != nil && *cloudprofileConfig.UseOctavia) ||
 		cloudprofileConfig.UseYAWOL == nil || !*cloudprofileConfig.UseYAWOL {
 		return map[string]interface{}{
-			"enabled":           false,
+			"enabled": false,
 		}, nil
 	}
 
 	values := map[string]interface{}{
 		"enabled":           true,
 		"replicas":          extensionscontroller.GetControlPlaneReplicas(cluster, scaledDown, 1),
-		"yawolNamespace":       cp.Namespace,
+		"yawolNamespace":    cp.Namespace,
 		"yawolOSSecretName": "subnet",
-		"yawolFloatingID": infraStatus.Networks.FloatingPool.ID,
-		"yawolNetworkID": infraStatus.Networks.ID,
-		"yawolFlavorID": cloudprofileConfig.YAWOLFlavorID,
-		"yawolImageID": cloudprofileConfig.YAWOLImageID,
+		"yawolFloatingID":   infraStatus.Networks.FloatingPool.ID,
+		"yawolNetworkID":    infraStatus.Networks.ID,
+		"yawolFlavorID":     cloudprofileConfig.YAWOLFlavorID,
+		"yawolImageID":      cloudprofileConfig.YAWOLImageID,
 		"podLabels": map[string]interface{}{
 			v1beta1constants.LabelPodMaintenanceRestart: "true",
 		},

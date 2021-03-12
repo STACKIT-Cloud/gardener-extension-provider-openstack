@@ -170,9 +170,19 @@ var (
 				},
 			},
 			{
-				Name:   openstack.YAWOLCloudControllerName,
-				Images: []string{openstack.YAWOLCloudControllerImageName},
+				Name: openstack.YAWOLControllerName,
+				Images: []string{
+					openstack.YAWOLControllerImageName,
+					openstack.YAWOLCloudControllerImageName,
+				},
 				Objects: []*chart.Object{
+					// YAWOLControllerName
+					{Type: &appsv1.Deployment{}, Name: openstack.YAWOLControllerName},
+					{Type: &corev1.ServiceAccount{}, Name: openstack.YAWOLControllerName},
+					{Type: &autoscalingv1beta2.VerticalPodAutoscaler{}, Name: openstack.YAWOLControllerName + "-vpa"},
+					{Type: &rbacv1.Role{}, Name: "extensions.gardener.cloud:" + openstack.YAWOLControllerName},
+					{Type: &rbacv1.RoleBinding{}, Name: "extensions.gardener.cloud:" + openstack.YAWOLControllerName},
+					// YAWOLCloudControllerName
 					{Type: &appsv1.Deployment{}, Name: openstack.YAWOLCloudControllerName},
 					{Type: &corev1.ServiceAccount{}, Name: openstack.YAWOLCloudControllerName},
 					{Type: &autoscalingv1beta2.VerticalPodAutoscaler{}, Name: openstack.YAWOLCloudControllerName + "-vpa"},

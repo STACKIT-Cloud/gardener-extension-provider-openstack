@@ -176,6 +176,8 @@ var (
 					{Type: &appsv1.Deployment{}, Name: openstack.YAWOLCloudControllerName},
 					{Type: &corev1.ServiceAccount{}, Name: openstack.YAWOLCloudControllerName},
 					{Type: &autoscalingv1beta2.VerticalPodAutoscaler{}, Name: openstack.YAWOLCloudControllerName + "-vpa"},
+					{Type: &rbacv1.Role{}, Name: "extensions.gardener.cloud:" + openstack.YAWOLCloudControllerName},
+					{Type: &rbacv1.RoleBinding{}, Name: "extensions.gardener.cloud:" + openstack.YAWOLCloudControllerName},
 				},
 			},
 			{

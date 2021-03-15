@@ -7,7 +7,7 @@ metadata:
     app: kubernetes
     role: yawol-cloud-controller
 spec:
-  ipFamily: IPv6
+  ipFamily: IPv4
   type: ClusterIP
   clusterIP: None
   ports:

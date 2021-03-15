@@ -7,7 +7,7 @@ metadata:
     extensions.gardener.cloud/configuration: monitoring
 data:
   scrape_config: |
-    - job_name: yawol-cloud-controller
+    - job_name: yawol-controller
       scheme: http
       honor_labels: false
       kubernetes_sd_configs:

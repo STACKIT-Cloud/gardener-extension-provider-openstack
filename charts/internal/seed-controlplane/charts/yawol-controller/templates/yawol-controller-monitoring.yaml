@@ -7,7 +7,7 @@ metadata:
     extensions.gardener.cloud/configuration: monitoring
 data:
   scrape_config: |
-    - job_name: yawol-controller
+    - job_name: yawol-controller-metrics1
       scheme: http
       honor_labels: false
       kubernetes_sd_configs:
@@ -20,22 +20,8 @@ data:
         - __meta_kubernetes_endpoint_port_name
         action: keep
         regex: yawol-controller;metrics1
-      - source_labels:
-        - __meta_kubernetes_service_name
-        - __meta_kubernetes_endpoint_port_name
-        action: keep
-        regex: yawol-controller;metrics3
-      - source_labels:
-        - __meta_kubernetes_service_name
-        - __meta_kubernetes_endpoint_port_name
-        action: keep
-        regex: yawol-controller;metrics2
       # common metrics
       - action: labelmap
         regex: __meta_kubernetes_service_label_(.+)
       - source_labels: [ __meta_kubernetes_pod_name ]
         target_label: pod
-#      metric_relabel_configs:
-#      - source_labels: [ __name__ ]
-#        regex: ^(rest_client_requests_total|process_max_fds|process_open_fds)$
-#        action: keep

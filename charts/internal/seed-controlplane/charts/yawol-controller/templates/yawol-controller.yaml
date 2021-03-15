@@ -38,8 +38,13 @@ spec:
         - name: yawol-controller
           image: {{ index .Values.images "yawol-controller" }}
           imagePullPolicy: Always
+          ports:
+          - containerPort: 8080
+          - containerPort: 8081
+          - containerPort: 8082
           command:
             - /bin/yawol-controller
+            - -enable-leader-election
           env:
           {{- if .Values.yawolNamespace }}
           - name: CLUSTER_NAMESPACE

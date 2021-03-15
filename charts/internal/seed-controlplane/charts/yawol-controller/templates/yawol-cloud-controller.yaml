@@ -38,9 +38,12 @@ spec:
       - name: yawol-cloud-controller
         image: {{ index .Values.images "yawol-cloud-controller" }}
         imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
         command:
         - /bin/yawol-cloud-controller
         - -target-kubeconfig=/var/lib/cloud-controller-manager/kubeconfig
+        - -enable-leader-election
         env:
         {{- if .Values.yawolNamespace }}
         - name: CLUSTER_NAMESPACE

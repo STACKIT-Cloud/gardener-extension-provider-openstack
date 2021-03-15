@@ -19,7 +19,7 @@ data:
         - __meta_kubernetes_service_name
         - __meta_kubernetes_endpoint_port_name
         action: keep
-        regex: yawol-controller;metrics1
+        regex: yawol-controller;metrics
       # common metrics
       - action: labelmap
         regex: __meta_kubernetes_service_label_(.+)

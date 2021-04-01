@@ -12,7 +12,11 @@ rules:
   - apiGroups: [""]
     resources:
       - "events"
-    verbs: ["create"]
+    verbs:
+    - create
+    - get
+    - list
+    - watch
   - apiGroups:
       - ""
     resources:

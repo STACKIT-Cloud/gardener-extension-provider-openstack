@@ -51,6 +51,8 @@ type CloudProfileConfig struct {
 	UseOctavia *bool
 	// UseYAWOL specifies whether the YAWOL load balancing is used. ignored if UseOctavia is true
 	UseYAWOL *bool
+	// YAWOLMigrateFromOctavia specifies that yawol should mograte from octavia. ignored if UseYAWOL is not true
+	YAWOLMigrateFromOctavia *bool
 	// YAWOLImageID specifies the openstack image for yawollet. Must set if UseYAWOL is set
 	YAWOLImageID *string
 	// YAWOLFlavorID specifies the openstack flavor for yawollet. Must set if UseYAWOL is set

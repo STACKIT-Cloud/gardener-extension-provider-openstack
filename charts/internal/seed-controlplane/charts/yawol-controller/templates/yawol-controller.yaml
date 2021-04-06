@@ -44,6 +44,9 @@ spec:
           command:
             - /bin/yawol-controller
             - -enable-leader-election
+          {{- if .Values.migrateFromOctavia }}
+            - --migrate-from-octavia={{ .Values.migrateFromOctavia }}
+          {{- end }}
           env:
           {{- if .Values.yawolNamespace }}
           - name: CLUSTER_NAMESPACE

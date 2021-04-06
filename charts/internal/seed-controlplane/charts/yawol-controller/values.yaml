@@ -24,3 +24,4 @@ resources:
 #yawolFlavorID: foo-bar
 #yawolImageID: foo-bar
 #yawolAPIHost
+#migrateFromOctavia: false

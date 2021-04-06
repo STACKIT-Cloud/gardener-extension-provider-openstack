@@ -190,6 +190,18 @@ bool
 </tr>
 <tr>
 <td>
+<code>yawolMigrateFromOctavia</code></br>
+<em>
+bool
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>YAWOLMigrateFromOctavia specifies that yawol should mograte from octavia. ignored if UseYAWOL is not true</p>
+</td>
+</tr>
+<tr>
+<td>
 <code>yawolImageID</code></br>
 <em>
 string

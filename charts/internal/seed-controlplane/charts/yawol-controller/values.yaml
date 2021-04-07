@@ -1,7 +1,4 @@
 replicas: 1
-clusterName: shoot-foo-bar
-kubernetesVersion: 1.7.5
-podNetwork: 192.168.0.0/16
 podAnnotations: {}
 podLabels: {}
 #controllers: "*"
@@ -12,7 +9,7 @@ proxy: {}
 #  http_proxy: "mytest.proxy:8118"
 #  no_proxy: "192.168.0.0/24"
 images:
-  hyperkube: image-repository:image-tag
+  yawol-cloud-controller: image-repository:image-tag
 resources:
   requests:
     cpu: 100m
@@ -20,3 +17,11 @@ resources:
   limits:
     cpu: 500m
     memory: 512Mi
+#yawolNamespace: foo-bar
+#yawolOSSecretName: cloud-provider-config
+#yawolFloatingID: foo-bar
+#yawolNetworkID: foo-bar
+#yawolFlavorID: foo-bar
+#yawolImageID: foo-bar
+#yawolAPIHost
+#migrateFromOctavia: false

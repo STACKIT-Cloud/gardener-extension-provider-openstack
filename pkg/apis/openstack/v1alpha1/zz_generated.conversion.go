@@ -312,6 +312,10 @@ func autoConvert_v1alpha1_CloudProfileConfig_To_openstack_CloudProfileConfig(in 
 	out.RescanBlockStorageOnResize = (*bool)(unsafe.Pointer(in.RescanBlockStorageOnResize))
 	out.NodeVolumeAttachLimit = (*int32)(unsafe.Pointer(in.NodeVolumeAttachLimit))
 	out.UseOctavia = (*bool)(unsafe.Pointer(in.UseOctavia))
+	out.UseYAWOL = (*bool)(unsafe.Pointer(in.UseYAWOL))
+	out.YAWOLMigrateFromOctavia = (*bool)(unsafe.Pointer(in.YAWOLMigrateFromOctavia))
+	out.YAWOLImageID = (*string)(unsafe.Pointer(in.YAWOLImageID))
+	out.YAWOLFlavorID = (*string)(unsafe.Pointer(in.YAWOLFlavorID))
 	out.InternalLB = (*bool)(unsafe.Pointer(in.InternalLB))
 	out.StorageClasses = *(*[]openstack.StorageClassDefinition)(unsafe.Pointer(&in.StorageClasses))
 	return nil
@@ -335,6 +339,10 @@ func autoConvert_openstack_CloudProfileConfig_To_v1alpha1_CloudProfileConfig(in 
 	out.RescanBlockStorageOnResize = (*bool)(unsafe.Pointer(in.RescanBlockStorageOnResize))
 	out.NodeVolumeAttachLimit = (*int32)(unsafe.Pointer(in.NodeVolumeAttachLimit))
 	out.UseOctavia = (*bool)(unsafe.Pointer(in.UseOctavia))
+	out.UseYAWOL = (*bool)(unsafe.Pointer(in.UseYAWOL))
+	out.YAWOLMigrateFromOctavia = (*bool)(unsafe.Pointer(in.YAWOLMigrateFromOctavia))
+	out.YAWOLImageID = (*string)(unsafe.Pointer(in.YAWOLImageID))
+	out.YAWOLFlavorID = (*string)(unsafe.Pointer(in.YAWOLFlavorID))
 	out.InternalLB = (*bool)(unsafe.Pointer(in.InternalLB))
 	out.StorageClasses = *(*[]StorageClassDefinition)(unsafe.Pointer(&in.StorageClasses))
 	return nil

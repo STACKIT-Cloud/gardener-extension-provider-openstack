@@ -178,6 +178,54 @@ bool
 </tr>
 <tr>
 <td>
+<code>useYAWOL</code></br>
+<em>
+bool
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>UseYAWOL specifies whether the YAWOL load balancing is used. ignored if UseOctavia is true</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>yawolMigrateFromOctavia</code></br>
+<em>
+bool
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>YAWOLMigrateFromOctavia specifies that yawol should mograte from octavia. ignored if UseYAWOL is not true</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>yawolImageID</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>YAWOLImageID specifies the openstack image for yawollet. Must set if UseYAWOL is set</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>yawolFlavorID</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>YAWOLFlavorID specifies the openstack flavor for yawollet. Must set if UseYAWOL is set</p>
+</td>
+</tr>
+<tr>
+<td>
 <code>internal_lb</code></br>
 <em>
 bool

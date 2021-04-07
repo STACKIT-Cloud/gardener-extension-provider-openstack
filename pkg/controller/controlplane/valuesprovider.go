@@ -170,6 +170,27 @@ var (
 				},
 			},
 			{
+				Name: openstack.YAWOLControllerName,
+				Images: []string{
+					openstack.YAWOLControllerImageName,
+					openstack.YAWOLCloudControllerImageName,
+				},
+				Objects: []*chart.Object{
+					// YAWOLControllerName
+					{Type: &appsv1.Deployment{}, Name: openstack.YAWOLControllerName},
+					{Type: &corev1.ServiceAccount{}, Name: openstack.YAWOLControllerName},
+					{Type: &autoscalingv1beta2.VerticalPodAutoscaler{}, Name: openstack.YAWOLControllerName + "-vpa"},
+					{Type: &rbacv1.Role{}, Name: "extensions.gardener.cloud:" + openstack.YAWOLControllerName},
+					{Type: &rbacv1.RoleBinding{}, Name: "extensions.gardener.cloud:" + openstack.YAWOLControllerName},
+					// YAWOLCloudControllerName
+					{Type: &appsv1.Deployment{}, Name: openstack.YAWOLCloudControllerName},
+					{Type: &corev1.ServiceAccount{}, Name: openstack.YAWOLCloudControllerName},
+					{Type: &autoscalingv1beta2.VerticalPodAutoscaler{}, Name: openstack.YAWOLCloudControllerName + "-vpa"},
+					{Type: &rbacv1.Role{}, Name: "extensions.gardener.cloud:" + openstack.YAWOLCloudControllerName},
+					{Type: &rbacv1.RoleBinding{}, Name: "extensions.gardener.cloud:" + openstack.YAWOLCloudControllerName},
+				},
+			},
+			{
 				Name: openstack.CSIControllerName,
 				Images: []string{
 					openstack.CSIDriverCinderImageName,
@@ -321,6 +342,20 @@ func (vp *valuesProvider) GetControlPlaneChartValues(
 		}
 	}
 
+	// Decode InfrastructureStatus
+	infraStatus := &api.InfrastructureStatus{}
+	if _, _, err := vp.Decoder().Decode(cp.Spec.InfrastructureProviderStatus.Raw, nil, infraStatus); err != nil {
+		return nil, errors.Wrapf(err, "could not decode infrastructureProviderStatus of controlplane '%s'", kutil.ObjectName(cp))
+	}
+
+	// Decode cloudprofileConfig
+	cloudProfileConfig := &api.CloudProfileConfig{}
+	if cluster.CloudProfile.Spec.ProviderConfig != nil {
+		if _, _, err := vp.Decoder().Decode(cluster.CloudProfile.Spec.ProviderConfig.Raw, nil, cloudProfileConfig); err != nil {
+			return nil, errors.Wrapf(err, "could not decode cloudProfileConfig of cluster.CloudProfile '%s'", kutil.ObjectName(cluster.CloudProfile))
+		}
+	}
+
 	cpConfigSecret := &corev1.Secret{}
 	if err := vp.Client().Get(ctx, kutil.Key(cp.Namespace, openstack.CloudProviderConfigName), cpConfigSecret); err != nil {
 		return nil, err
@@ -345,7 +380,7 @@ func (vp *valuesProvider) GetControlPlaneChartValues(
 		return nil, err
 	}
 
-	return getControlPlaneChartValues(cpConfig, cp, cluster, checksums, scaledDown)
+	return getControlPlaneChartValues(cpConfig, cp, cluster, cloudProfileConfig, infraStatus, checksums, scaledDown)
 }
 
 // GetControlPlaneShootChartValues returns the values for the control plane shoot chart applied by the generic actuator.
@@ -569,10 +604,12 @@ func getControlPlaneChartValues(
 	cpConfig *api.ControlPlaneConfig,
 	cp *extensionsv1alpha1.ControlPlane,
 	cluster *extensionscontroller.Cluster,
+	cloudprofileConfig *api.CloudProfileConfig,
+	infraStatus *api.InfrastructureStatus,
 	checksums map[string]string,
 	scaledDown bool,
 ) (map[string]interface{}, error) {
-	ccm, err := getCCMChartValues(cpConfig, cp, cluster, checksums, scaledDown)
+	ccm, err := getCCMChartValues(cpConfig, cp, cluster, cloudprofileConfig, checksums, scaledDown)
 	if err != nil {
 		return nil, err
 	}
@@ -582,9 +619,15 @@ func getControlPlaneChartValues(
 		return nil, err
 	}
 
+	yawol, err := getYawolChartValues(cpConfig, cp, cluster, cloudprofileConfig, infraStatus, checksums, scaledDown)
+	if err != nil {
+		return nil, err
+	}
+
 	return map[string]interface{}{
 		openstack.CloudControllerManagerName: ccm,
 		openstack.CSIControllerName:          csi,
+		openstack.YAWOLControllerName:        yawol,
 	}, nil
 }
 
@@ -593,6 +636,7 @@ func getCCMChartValues(
 	cpConfig *api.ControlPlaneConfig,
 	cp *extensionsv1alpha1.ControlPlane,
 	cluster *extensionscontroller.Cluster,
+	cloudprofileConfig *api.CloudProfileConfig,
 	checksums map[string]string,
 	scaledDown bool,
 ) (map[string]interface{}, error) {
@@ -626,6 +670,13 @@ func getCCMChartValues(
 			"http_proxy": httpProxy,
 			"no_proxy":   noProxy,
 		},
+	}
+
+	// disable service controller if yawol is enabled and useOctavia is not true
+	if cloudprofileConfig.UseYAWOL != nil && *cloudprofileConfig.UseYAWOL {
+		if !(cloudprofileConfig.UseOctavia != nil && *cloudprofileConfig.UseOctavia) {
+			values["controllers"] = "*,-service"
+		}
 	}
 
 	if cpConfig.CloudControllerManager != nil {
@@ -682,6 +733,48 @@ func getCSIControllerChartValues(
 			"no_proxy":   noProxy,
 		},
 	}, nil
+}
+
+// getYawolChartValues collects and returns the yawol controller chart values.
+func getYawolChartValues(
+	cpConfig *api.ControlPlaneConfig,
+	cp *extensionsv1alpha1.ControlPlane,
+	cluster *extensionscontroller.Cluster,
+	cloudprofileConfig *api.CloudProfileConfig,
+	infraStatus *api.InfrastructureStatus,
+	checksums map[string]string,
+	scaledDown bool,
+) (map[string]interface{}, error) {
+
+	// disable yawol service controller if yawol is disables or useOctavia is true
+	if (cloudprofileConfig.UseOctavia != nil && *cloudprofileConfig.UseOctavia) ||
+		cloudprofileConfig.UseYAWOL == nil || !*cloudprofileConfig.UseYAWOL {
+		return map[string]interface{}{
+			"enabled": false,
+		}, nil
+	}
+
+
+	ls := strings.TrimPrefix(cluster.Seed.Spec.DNS.IngressDomain, "i.")
+	la := "https://api." + ls
+
+	values := map[string]interface{}{
+		"enabled":           true,
+		"replicas":          extensionscontroller.GetControlPlaneReplicas(cluster, scaledDown, 1),
+		"yawolNamespace":    cp.Namespace,
+		"yawolOSSecretName": "cloud-provider-config",
+		"yawolFloatingID":   infraStatus.Networks.FloatingPool.ID,
+		"yawolNetworkID":    infraStatus.Networks.ID,
+		"yawolFlavorID":     cloudprofileConfig.YAWOLFlavorID,
+		"yawolImageID":      cloudprofileConfig.YAWOLImageID,
+		"migrateFromOctavia": cloudprofileConfig.YAWOLMigrateFromOctavia,
+		"yawolAPIHost":      la,
+		"podLabels": map[string]interface{}{
+			v1beta1constants.LabelPodMaintenanceRestart: "true",
+		},
+	}
+
+	return values, nil
 }
 
 // getControlPlaneShootChartValues collects and returns the control plane shoot chart values.

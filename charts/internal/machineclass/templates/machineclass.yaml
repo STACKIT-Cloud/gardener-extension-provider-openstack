@@ -40,6 +40,9 @@ spec:
 {{- if $machineClass.rootDiskSize }}
   rootDiskSize: {{ $machineClass.rootDiskSize }}
 {{- end}}
+{{- if $machineClass.volumeType }}
+  volumeType: {{ $machineClass.volumeType }}
+{{- end}}
   securityGroups:
 {{ toYaml $machineClass.securityGroups | indent 2 }}
   secretRef:

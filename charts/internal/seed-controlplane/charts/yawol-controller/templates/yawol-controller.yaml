@@ -1,0 +1,59 @@
+apiVersion: {{ include "deploymentversion" . }}
+kind: Deployment
+metadata:
+  name: yawol-controller
+  namespace: {{ .Release.Namespace }}
+  labels:
+    garden.sapcloud.io/role: controlplane
+    app: kubernetes
+    role: yawol-controller
+spec:
+  revisionHistoryLimit: 0
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: kubernetes
+      role: yawol-controller
+  template:
+    metadata:
+{{- if .Values.podAnnotations }}
+      annotations:
+{{ toYaml .Values.podAnnotations | indent 8 }}
+{{- end }}
+      labels:
+        garden.sapcloud.io/role: controlplane
+        app: kubernetes
+        role: yawol-controller
+        networking.gardener.cloud/to-dns: allowed
+        networking.gardener.cloud/to-public-networks: allowed
+        networking.gardener.cloud/to-private-networks: allowed
+        networking.gardener.cloud/to-shoot-apiserver: allowed
+        networking.gardener.cloud/from-prometheus: allowed
+{{- if .Values.podLabels }}
+{{ toYaml .Values.podLabels | indent 8 }}
+{{- end }}
+    spec:
+      serviceAccountName: yawol-controller
+      containers:
+        - name: yawol-controller
+          image: {{ index .Values.images "yawol-controller" }}
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 8080
+            name: metrics
+          command:
+            - /bin/yawol-controller
+            - -enable-leader-election
+          {{- if .Values.migrateFromOctavia }}
+            - --migrate-from-octavia={{ .Values.migrateFromOctavia }}
+          {{- end }}
+          env:
+          {{- if .Values.yawolNamespace }}
+          - name: CLUSTER_NAMESPACE
+            value: {{ .Values.yawolNamespace }}
+          {{- end }}
+            {{- if .Values.yawolAPIHost }}
+          - name: API_ENDPOINT
+            value: {{ .Values.yawolAPIHost }}
+          {{- end }}
+      restartPolicy: Always

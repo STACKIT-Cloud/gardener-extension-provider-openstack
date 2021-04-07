@@ -67,3 +67,5 @@ config:
 gardener:
   seed:
     provider: openstack
+
+yawolCRDs: false

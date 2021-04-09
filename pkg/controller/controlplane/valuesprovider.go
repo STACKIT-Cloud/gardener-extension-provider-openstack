@@ -756,7 +756,7 @@ func getYawolChartValues(
 
 	var la string
 	if ok := cluster.Seed.Annotations["stackit.cloud/initial-seed-apiurl"]; ok != "" {
-		la = ok
+		la = "https://" + ok
 	} else {
 		ls := strings.TrimPrefix(cluster.Seed.Spec.DNS.IngressDomain, "i.")
 		la = "https://api." + ls

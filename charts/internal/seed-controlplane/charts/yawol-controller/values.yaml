@@ -25,3 +25,4 @@ resources:
 #yawolImageID: foo-bar
 #yawolAPIHost
 #migrateFromOctavia: false
+#yawolDebug:false

@@ -53,6 +53,8 @@ type CloudProfileConfig struct {
 	UseYAWOL *bool
 	// YAWOLMigrateFromOctavia specifies that yawol should mograte from octavia. ignored if UseYAWOL is not true
 	YAWOLMigrateFromOctavia *bool
+	// YAWOLDebug add debug flag to yawol-controller
+	YAWOLDebug *bool
 	// YAWOLImageID specifies the openstack image for yawollet. Must set if UseYAWOL is set
 	YAWOLImageID *string
 	// YAWOLFlavorID specifies the openstack flavor for yawollet. Must set if UseYAWOL is set

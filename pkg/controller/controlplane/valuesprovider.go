@@ -768,6 +768,7 @@ func getYawolChartValues(
 		"yawolFlavorID":     cloudprofileConfig.YAWOLFlavorID,
 		"yawolImageID":      cloudprofileConfig.YAWOLImageID,
 		"migrateFromOctavia": cloudprofileConfig.YAWOLMigrateFromOctavia,
+		"yawolDebug": cloudprofileConfig.YAWOLDebug,
 		"yawolAPIHost":      la,
 		"podLabels": map[string]interface{}{
 			v1beta1constants.LabelPodMaintenanceRestart: "true",

@@ -48,6 +48,9 @@ spec:
           {{- if .Values.migrateFromOctavia }}
             - --migrate-from-octavia={{ .Values.migrateFromOctavia }}
           {{- end }}
+          {{- if .Values.yawolDebug }}
+            - --debug={{ .Values.yawolDebug }}
+          {{- end }}
           env:
           {{- if .Values.yawolNamespace }}
           - name: CLUSTER_NAMESPACE

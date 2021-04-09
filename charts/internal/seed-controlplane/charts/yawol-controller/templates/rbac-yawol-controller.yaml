@@ -32,7 +32,9 @@ rules:
   - apiGroups: [""]
     resources:
       - "events"
-    verbs: ["create"]
+    verbs:
+      - create
+      - patch
   - apiGroups:
       - ""
     resources:

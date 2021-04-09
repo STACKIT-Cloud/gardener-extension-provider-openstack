@@ -202,6 +202,18 @@ bool
 </tr>
 <tr>
 <td>
+<code>yawolDebug</code></br>
+<em>
+bool
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>YAWOLDebug add debug flag to yawol-controller</p>
+</td>
+</tr>
+<tr>
+<td>
 <code>yawolImageID</code></br>
 <em>
 string

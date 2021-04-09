@@ -62,6 +62,9 @@ type CloudProfileConfig struct {
 	// YAWOLMigrateFromOctavia specifies that yawol should mograte from octavia. ignored if UseYAWOL is not true
 	// +optional
 	YAWOLMigrateFromOctavia *bool `json:"yawolMigrateFromOctavia,omitempty"`
+	// YAWOLDebug add debug flag to yawol-controller
+	// +optional
+	YAWOLDebug *bool `json:"yawolDebug,omitempty"`
 	// YAWOLImageID specifies the openstack image for yawollet. Must set if UseYAWOL is set
 	// +optional
 	YAWOLImageID *string `json:"yawolImageID,omitempty"`

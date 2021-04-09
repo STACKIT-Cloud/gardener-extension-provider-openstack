@@ -104,6 +104,11 @@ func (in *CloudProfileConfig) DeepCopyInto(out *CloudProfileConfig) {
 		*out = new(bool)
 		**out = **in
 	}
+	if in.YAWOLDebug != nil {
+		in, out := &in.YAWOLDebug, &out.YAWOLDebug
+		*out = new(bool)
+		**out = **in
+	}
 	if in.YAWOLImageID != nil {
 		in, out := &in.YAWOLImageID, &out.YAWOLImageID
 		*out = new(string)

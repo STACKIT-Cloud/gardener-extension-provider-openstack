@@ -754,21 +754,26 @@ func getYawolChartValues(
 		}, nil
 	}
 
-
-	ls := strings.TrimPrefix(cluster.Seed.Spec.DNS.IngressDomain, "i.")
-	la := "https://api." + ls
+	var la string
+	if ok := cluster.Seed.Annotations["stackit.cloud/initial-seed-apiurl"]; ok != "" {
+		la = "https://" + ok
+	} else {
+		ls := strings.TrimPrefix(cluster.Seed.Spec.DNS.IngressDomain, "i.")
+		la = "https://api." + ls
+	}
 
 	values := map[string]interface{}{
-		"enabled":           true,
-		"replicas":          extensionscontroller.GetControlPlaneReplicas(cluster, scaledDown, 1),
-		"yawolNamespace":    cp.Namespace,
-		"yawolOSSecretName": "cloud-provider-config",
-		"yawolFloatingID":   infraStatus.Networks.FloatingPool.ID,
-		"yawolNetworkID":    infraStatus.Networks.ID,
-		"yawolFlavorID":     cloudprofileConfig.YAWOLFlavorID,
-		"yawolImageID":      cloudprofileConfig.YAWOLImageID,
+		"enabled":            true,
+		"replicas":           extensionscontroller.GetControlPlaneReplicas(cluster, scaledDown, 1),
+		"yawolNamespace":     cp.Namespace,
+		"yawolOSSecretName":  "cloud-provider-config",
+		"yawolFloatingID":    infraStatus.Networks.FloatingPool.ID,
+		"yawolNetworkID":     infraStatus.Networks.ID,
+		"yawolFlavorID":      cloudprofileConfig.YAWOLFlavorID,
+		"yawolImageID":       cloudprofileConfig.YAWOLImageID,
 		"migrateFromOctavia": cloudprofileConfig.YAWOLMigrateFromOctavia,
-		"yawolAPIHost":      la,
+		"yawolDebug":         cloudprofileConfig.YAWOLDebug,
+		"yawolAPIHost":       la,
 		"podLabels": map[string]interface{}{
 			v1beta1constants.LabelPodMaintenanceRestart: "true",
 		},

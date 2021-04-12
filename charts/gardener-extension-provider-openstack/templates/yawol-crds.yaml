@@ -180,6 +180,11 @@ spec:
                   description: CreationTimestamp contains the creation timestamp a LoadBalancerMachine.
                   format: date-time
                   type: string
+                lastOpenstackReconcile:
+                  description: LastOpenstackReconcile contains the timestamp of the
+                    last openstack reconciliation.
+                  format: date-time
+                  type: string
                 metrics:
                   description: Metrics contains metrics for a LoadBalancerMachine.
                   items:
@@ -477,6 +482,11 @@ spec:
                   type: string
                 floatingName:
                   description: FloatingName is the current openstack name from the FloatingIP.
+                  type: string
+                lastOpenstackReconcile:
+                  description: LastOpenstackReconcile contains the timestamp of the
+                    last openstack reconciliation.
+                  format: date-time
                   type: string
                 nodeRoleRef:
                   description: NodeRole is the current role metadata that is used by

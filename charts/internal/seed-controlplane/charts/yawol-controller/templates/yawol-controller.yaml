@@ -57,10 +57,6 @@ spec:
           - name: CLUSTER_NAMESPACE
             value: {{ .Values.yawolNamespace }}
           {{- end }}
-            {{- if .Values.yawolAPIHost }}
-          - name: API_ENDPOINT
-            value: {{ .Values.yawolAPIHost }}
-          {{- end }}
         - name: yawol-controller-loadbalancerset
           image: {{ index .Values.images "yawol-controller" }}
           imagePullPolicy: Always
@@ -81,10 +77,6 @@ spec:
             {{- if .Values.yawolNamespace }}
             - name: CLUSTER_NAMESPACE
               value: {{ .Values.yawolNamespace }}
-              {{- end }}
-            {{- if .Values.yawolAPIHost }}
-            - name: API_ENDPOINT
-              value: {{ .Values.yawolAPIHost }}
             {{- end }}
         - name: yawol-controller-loadbalancermachine
           image: {{ index .Values.images "yawol-controller" }}

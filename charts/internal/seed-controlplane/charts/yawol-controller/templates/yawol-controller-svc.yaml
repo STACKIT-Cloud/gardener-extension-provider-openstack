@@ -11,10 +11,15 @@ spec:
   type: ClusterIP
   clusterIP: None
   ports:
-    - name: metrics
+    - name: metrics-lb
       port: 8080
       protocol: TCP
-
+    - name: metrics-lbs
+      port: 8081
+      protocol: TCP
+    - name: metrics-lbm
+      port: 8082
+      protocol: TCP
   selector:
     app: kubernetes
     role: yawol-controller

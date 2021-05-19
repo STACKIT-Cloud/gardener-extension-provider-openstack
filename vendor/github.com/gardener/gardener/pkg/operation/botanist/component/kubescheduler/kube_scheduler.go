@@ -143,6 +143,7 @@ func (k *kubeScheduler) Deploy(ctx context.Context) error {
 		return err
 	}
 
+	ipFamilies := []corev1.IPFamily{corev1.IPv4Protocol}
 	if _, err := controllerutil.CreateOrUpdate(ctx, k.client, service, func() error {
 		service.Labels = getLabels()
 		service.Spec.Selector = getLabels()
@@ -154,6 +155,7 @@ func (k *kubeScheduler) Deploy(ctx context.Context) error {
 				Port:     port,
 			},
 		})
+		service.Spec.IPFamilies = ipFamilies
 		return nil
 	}); err != nil {
 		return err
@@ -280,6 +282,17 @@ func (k *kubeScheduler) Deploy(ctx context.Context) error {
 		}
 		vpa.Spec.UpdatePolicy = &autoscalingv1beta2.PodUpdatePolicy{
 			UpdateMode: &vpaUpdateMode,
+		}
+		vpa.Spec.ResourcePolicy = &autoscalingv1beta2.PodResourcePolicy{
+			ContainerPolicies: []autoscalingv1beta2.ContainerResourcePolicy{
+				{
+					ContainerName: autoscalingv1beta2.DefaultContainerResourcePolicy,
+					MinAllowed: corev1.ResourceList{
+						corev1.ResourceCPU:    resource.MustParse("20m"),
+						corev1.ResourceMemory: resource.MustParse("50Mi"),
+					},
+				},
+			},
 		}
 		return nil
 	}); err != nil {

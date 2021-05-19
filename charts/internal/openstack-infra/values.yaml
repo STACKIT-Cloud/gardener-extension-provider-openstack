@@ -20,13 +20,22 @@ dnsServers:
 clusterName: test-namespace
 
 networks:
+  nodeIPv4: 10.250.0.0/19
+  # nodeIPv6: fe80:2::/64
   workers: 10.250.0.0/19
+  dualHomed: false
+  subnetPoolID: fff
+  serviceV6CIDR: fe80:1::/64
+  podV6CIDR: fe80::/64
+  externalNetworkID: aaaa-assdsad-dsadas
 
 outputKeys:
   routerID: router_id
   networkID: network_id
+  networkIDv6: network_id_v6
   keyName: key_name
   securityGroupID: security_group_id
   securityGroupName: security_group_name
   floatingNetworkID: floating_network_id
   subnetID: subnet_id
+  subnetIDv6: subnet_id_v6

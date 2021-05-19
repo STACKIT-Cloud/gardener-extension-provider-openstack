@@ -8,6 +8,7 @@ password: barPass
 region: eu
 # [LoadBalancer]
 lbProvider: foobar
+internalLB: false
 # floatingNetworkID: foo-bar-123
 # subnetID: foo-bar-123
 # [Metadata]

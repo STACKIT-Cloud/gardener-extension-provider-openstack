@@ -103,11 +103,16 @@ func NewTerraformerWithAuth(
 	restConfig *rest.Config,
 	purpose string,
 	infra *extensionsv1alpha1.Infrastructure,
+	additionalEnvs map[string]string,
 ) (terraformer.Terraformer, error) {
 	tf, err := NewTerraformer(logger, restConfig, purpose, infra)
 	if err != nil {
 		return nil, err
 	}
 
+	envs := TerraformerVariablesEnvironmentFromCredentials(creds)
+	for key, value := range additionalEnvs {
+		envs[key] = value
+	}
 	return tf.SetEnvVars(TerraformerEnvVars(infra.Spec.SecretRef)...), nil
 }

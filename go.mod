@@ -42,6 +42,7 @@ require (
 )
 
 replace (
+	github.com/gardener/gardener v1.10.0 => github.com/stackitcloud/gardener v1.10.33-ske
 	github.com/prometheus/client_golang => github.com/prometheus/client_golang v1.7.1 // keep this value in sync with sigs.k8s.io/controller-runtime
 	k8s.io/api => k8s.io/api v0.20.2
 	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.20.2

@@ -110,9 +110,15 @@ func NewTerraformerWithAuth(
 		return nil, err
 	}
 
-	envs := TerraformerVariablesEnvironmentFromCredentials(creds)
+	var envs []corev1.EnvVar
+	envs = append(envs, TerraformerEnvVars(infra.Spec.SecretRef)...)
+
 	for key, value := range additionalEnvs {
-		envs[key] = value
+		envs = append(envs, corev1.EnvVar{
+			Name:  key,
+			Value: value,
+		})
 	}
-	return tf.SetEnvVars(TerraformerEnvVars(infra.Spec.SecretRef)...), nil
+
+	return tf.SetEnvVars(envs...), nil
 }

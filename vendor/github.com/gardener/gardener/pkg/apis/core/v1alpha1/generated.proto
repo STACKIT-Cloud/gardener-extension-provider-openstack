@@ -198,7 +198,7 @@ message BackupEntrySpec {
   // BucketName is the name of backup bucket for this Backup Entry.
   optional string bucketName = 1;
 
-  // Seed holds the name of the seed allocated to BackupEntry for running controller.
+  // SeedName holds the name of the seed to which this BackupEntry is scheduled
   // +optional
   optional string seed = 2;
 }
@@ -217,6 +217,11 @@ message BackupEntryStatus {
   // BackupEntry's generation, which is updated on mutation by the API Server.
   // +optional
   optional int64 observedGeneration = 3;
+
+  // SeedName is the name of the seed to which this BackupEntry is currently scheduled. This field is populated
+  // at the beginning of a create/reconcile operation. It is used when moving the BackupEntry between seeds.
+  // +optional
+  optional string seedName = 4;
 }
 
 // CRI contains information about the Container Runtimes.
@@ -312,6 +317,10 @@ message CloudProfileSpec {
   // +patchStrategy=merge
   // +optional
   repeated VolumeType volumeTypes = 9;
+
+  // MonitoringConfig contains settings for the monitoring stack
+  // +optional
+  optional MonitoringConfig monitoring = 10;
 }
 
 // ClusterAutoscaler contains the configuration flags for the Kubernetes cluster autoscaler.
@@ -820,6 +829,10 @@ message KubeControllerManagerConfig {
   // PodEvictionTimeout defines the grace period for deleting pods on failed nodes. Defaults to 2m.
   // +optional
   optional k8s.io.apimachinery.pkg.apis.meta.v1.Duration podEvictionTimeout = 4;
+
+  // NodeMonitorGracePeriod defines the grace period before an unresponsive node is marked unhealthy.
+  // +optional
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.Duration nodeMonitorGracePeriod = 5;
 }
 
 // KubeProxyConfig contains configuration settings for the kube-proxy.
@@ -1208,10 +1221,16 @@ message MachineTypeStorage {
   optional string class = 1;
 
   // StorageSize is the storage size.
+  // +optional
   optional k8s.io.apimachinery.pkg.api.resource.Quantity size = 2;
 
   // Type is the type of the storage.
   optional string type = 3;
+
+  // MinSize is the minimal supported storage size.
+  // This overrides any other common minimum size configuration from `spec.volumeTypes[*].minSize`.
+  // +optional
+  optional k8s.io.apimachinery.pkg.api.resource.Quantity minSize = 4;
 }
 
 // Maintenance contains information about the time window for maintenance operations and which
@@ -1257,6 +1276,21 @@ message Monitoring {
   // Alerting contains information about the alerting configuration for the shoot cluster.
   // +optional
   optional Alerting alerting = 1;
+}
+
+// MonitoringConfig contains settings for the monitoring stack
+message MonitoringConfig {
+  // RemoteWriteURL contains a Url for remote write
+  // +optional
+  optional string remoteWriteURL = 1;
+
+  // RemoteWriteURL contains a username for remote write
+  // +optional
+  optional string remoteWriteUsername = 2;
+
+  // RemoteWriteUsername contains a password for remote write
+  // +optional
+  optional string remoteWritePassword = 3;
 }
 
 // NamedResourceReference is a named reference to a resource.
@@ -1836,6 +1870,58 @@ message SeedSettingVerticalPodAutoscaler {
   // is enabled by default because Gardener heavily relies on a VPA being deployed. You should only disable this if
   // your seed cluster already has another, manually/custom managed VPA deployment.
   optional bool enabled = 1;
+
+  // UpdaterInterval set the Interval
+  // +optional
+  optional string updaterInterval = 2;
+
+  // UpdaterEvictAfterOOMThreshold set the Interval
+  // +optional
+  optional string updaterEvictAfterOOMThreshold = 3;
+
+  // GardenletMinAllowed set the VPA minAllowed settings for the gardenlet
+  // +optional
+  optional SeedSettingVerticalPodAutoscalerMinAllowed gardenletMinAllowed = 4;
+
+  // GardenerResourceManagerMinAllowed set the VPA minAllowed settings for the GardenerResourceManager
+  // +optional
+  optional SeedSettingVerticalPodAutoscalerMinAllowed gardenerResourceManagerMinAllowed = 5;
+
+  // GardenerSeedAdmissionControllerMinAllowed set the VPA minAllowed settings for the SeedAdmissionController
+  // +optional
+  optional SeedSettingVerticalPodAutoscalerMinAllowed gardenerSeedAdmissionControllerMinAllowed = 6;
+
+  // AggregatePrometheusMinAllowed set the VPA minAllowed settings for the AggregatePrometheus
+  // +optional
+  optional SeedSettingVerticalPodAutoscalerMinAllowed aggregatePrometheusMinAllowed = 7;
+
+  // VpaUpdaterMinAllowed set the VPA minAllowed settings for the VpaUpdater
+  // +optional
+  optional SeedSettingVerticalPodAutoscalerMinAllowed vpaUpdaterMinAllowed = 8;
+
+  // VpaRecommenderMinAllowed set the VPA minAllowed settings for the VpaRecommender
+  // +optional
+  optional SeedSettingVerticalPodAutoscalerMinAllowed vpaRecommenderMinAllowed = 9;
+
+  // VpaExporterMinAllowed set the VPA minAllowed settings for the VpaExporter
+  // +optional
+  optional SeedSettingVerticalPodAutoscalerMinAllowed vpaExporterMinAllowed = 10;
+
+  // VpaAdmissionControllerMinAllowed set the VPA minAllowed settings for the VpaAdmissionController
+  // +optional
+  optional SeedSettingVerticalPodAutoscalerMinAllowed vpaAdmissionControllerMinAllowed = 11;
+}
+
+// SeedSettingVerticalPodAutoscalerMinAllowed controls certain settings for the vertical pod autoscaler minAllowed values
+// seed.
+message SeedSettingVerticalPodAutoscalerMinAllowed {
+  // Memory Set the minAllowed memory for a component
+  // +optional
+  optional string memory = 1;
+
+  // Cpu Set the minAllowed cpu for a component
+  // +optional
+  optional string cpu = 2;
 }
 
 // SeedSettings contains certain settings for this seed cluster.
@@ -2289,6 +2375,10 @@ message VolumeType {
   // Usable defines if the volume type can be used for shoot clusters.
   // +optional
   optional bool usable = 3;
+
+  // MinSize is the minimal supported storage size.
+  // +optional
+  optional k8s.io.apimachinery.pkg.api.resource.Quantity minSize = 4;
 }
 
 // WatchCacheSizes contains configuration of the API server's watch cache sizes.

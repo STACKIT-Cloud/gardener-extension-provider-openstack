@@ -46,9 +46,7 @@ string
 <td>
 <code>clientConnection</code></br>
 <em>
-<a href="https://godoc.org/k8s.io/component-base/config/v1alpha1#ClientConnectionConfiguration">
-Kubernetes v1alpha1.ClientConnectionConfiguration
-</a>
+invalid type
 </em>
 </td>
 <td>

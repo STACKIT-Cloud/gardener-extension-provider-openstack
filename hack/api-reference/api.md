@@ -1457,6 +1457,89 @@ string
 </tr>
 </tbody>
 </table>
+<h3 id="openstack.provider.extensions.gardener.cloud/v1alpha1.ServerGroup">ServerGroup
+</h3>
+<p>
+(<em>Appears on:</em>
+<a href="#openstack.provider.extensions.gardener.cloud/v1alpha1.WorkerConfig">WorkerConfig</a>)
+</p>
+<p>
+<p>ServerGroup contains configuration data for setting up a server group.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>policy</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Policy describes the kind of affinity policy for instances of the server group.
+<a href="https://docs.openstack.org/python-openstackclient/ussuri/cli/command-objects/server-group.html">https://docs.openstack.org/python-openstackclient/ussuri/cli/command-objects/server-group.html</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="openstack.provider.extensions.gardener.cloud/v1alpha1.ServerGroupDependency">ServerGroupDependency
+</h3>
+<p>
+(<em>Appears on:</em>
+<a href="#openstack.provider.extensions.gardener.cloud/v1alpha1.WorkerStatus">WorkerStatus</a>)
+</p>
+<p>
+<p>ServerGroupDependency is a reference to an external machine dependency of OpenStack server groups.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>poolName</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+<p>PoolName identifies the worker pool that this dependency belongs</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>id</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+<p>ID is the provider&rsquo;s generated ID for a server group</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>name</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Name is the name of the server group</p>
+</td>
+</tr>
+</tbody>
+</table>
 <h3 id="openstack.provider.extensions.gardener.cloud/v1alpha1.StorageClassDefinition">StorageClassDefinition
 </h3>
 <p>
@@ -1555,89 +1638,6 @@ string
 <td>
 <em>(Optional)</em>
 <p>ReclaimPolicy sets reclaimPolicy for the storageclass</p>
-</td>
-</tr>
-</tbody>
-</table>
-<h3 id="openstack.provider.extensions.gardener.cloud/v1alpha1.ServerGroup">ServerGroup
-</h3>
-<p>
-(<em>Appears on:</em>
-<a href="#openstack.provider.extensions.gardener.cloud/v1alpha1.WorkerConfig">WorkerConfig</a>)
-</p>
-<p>
-<p>ServerGroup contains configuration data for setting up a server group.</p>
-</p>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>policy</code></br>
-<em>
-string
-</em>
-</td>
-<td>
-<p>Policy describes the kind of affinity policy for instances of the server group.
-<a href="https://docs.openstack.org/python-openstackclient/ussuri/cli/command-objects/server-group.html">https://docs.openstack.org/python-openstackclient/ussuri/cli/command-objects/server-group.html</a></p>
-</td>
-</tr>
-</tbody>
-</table>
-<h3 id="openstack.provider.extensions.gardener.cloud/v1alpha1.ServerGroupDependency">ServerGroupDependency
-</h3>
-<p>
-(<em>Appears on:</em>
-<a href="#openstack.provider.extensions.gardener.cloud/v1alpha1.WorkerStatus">WorkerStatus</a>)
-</p>
-<p>
-<p>ServerGroupDependency is a reference to an external machine dependency of OpenStack server groups.</p>
-</p>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<code>poolName</code></br>
-<em>
-string
-</em>
-</td>
-<td>
-<p>PoolName identifies the worker pool that this dependency belongs</p>
-</td>
-</tr>
-<tr>
-<td>
-<code>id</code></br>
-<em>
-string
-</em>
-</td>
-<td>
-<p>ID is the provider&rsquo;s generated ID for a server group</p>
-</td>
-</tr>
-<tr>
-<td>
-<code>name</code></br>
-<em>
-string
-</em>
-</td>
-<td>
-<p>Name is the name of the server group</p>
 </td>
 </tr>
 </tbody>

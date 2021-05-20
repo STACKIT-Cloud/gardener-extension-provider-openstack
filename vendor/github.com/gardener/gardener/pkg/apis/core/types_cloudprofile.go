@@ -69,6 +69,18 @@ type CloudProfileSpec struct {
 	Type string
 	// VolumeTypes contains constraints regarding allowed values for volume types in the 'workers' block in the Shoot specification.
 	VolumeTypes []VolumeType
+	// MonitoringConfig contains settings for the monitoring stack
+	Monitoring MonitoringConfig
+}
+
+// MonitoringConfig contains settings for the monitoring stack
+type MonitoringConfig struct {
+	// RemoteWriteURL contains a Url for remote write
+	RemoteWriteURL string
+	// RemoteWriteURL contains a username for remote write
+	RemoteWriteUsername string
+	// RemoteWriteUsername contains a password for remote write
+	RemoteWritePassword string
 }
 
 func (c *CloudProfile) GetProviderType() string {
@@ -137,9 +149,12 @@ type MachineTypeStorage struct {
 	// Class is the class of the storage type.
 	Class string
 	// StorageSize is the storage size.
-	StorageSize resource.Quantity
+	StorageSize *resource.Quantity
 	// Type is the type of the storage.
 	Type string
+	// MinSize is the minimal supported storage size.
+	// This overrides any other common minimum size configuration in the `spec.volumeTypes[*].minSize`.
+	MinSize *resource.Quantity
 }
 
 // Region contains certain properties of a region.
@@ -172,6 +187,8 @@ type VolumeType struct {
 	Name string
 	// Usable defines if the volume type can be used for shoot clusters.
 	Usable *bool
+	// MinSize is the minimal supported storage size.
+	MinSize *resource.Quantity
 }
 
 const (

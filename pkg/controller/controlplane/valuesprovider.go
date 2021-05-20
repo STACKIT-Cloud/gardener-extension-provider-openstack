@@ -376,7 +376,7 @@ func (vp *valuesProvider) GetControlPlaneChartValues(
 		userAgentHeaders = vp.getUserAgentHeaders(ctx, cp, cluster)
 	}
 
-	return getControlPlaneChartValues(cpConfig, cp, cluster, userAgentHeaders, checksums, scaledDown)
+	return getControlPlaneChartValues(cpConfig, cp, cluster, cloudProfileConfig, infraStatus, userAgentHeaders, checksums, scaledDown)
 }
 
 // GetControlPlaneShootChartValues returns the values for the control plane shoot chart applied by the generic actuator.
@@ -631,7 +631,7 @@ func getControlPlaneChartValues(
 	checksums map[string]string,
 	scaledDown bool,
 ) (map[string]interface{}, error) {
-	ccm, err := getCCMChartValues(cpConfig, cp, cluster, userAgentHeaders, checksums, scaledDown)
+	ccm, err := getCCMChartValues(cpConfig, cp, cluster, cloudprofileConfig, userAgentHeaders, checksums, scaledDown)
 	if err != nil {
 		return nil, err
 	}
@@ -790,7 +790,7 @@ func getYawolChartValues(
 	if ok := cluster.Seed.Annotations["stackit.cloud/initial-seed-apiurl"]; ok != "" {
 		la = "https://" + ok
 	} else {
-		ls := strings.TrimPrefix(cluster.Seed.Spec.DNS.IngressDomain, "i.")
+		ls := strings.TrimPrefix(*cluster.Seed.Spec.DNS.IngressDomain, "i.")
 		la = "https://api." + ls
 	}
 

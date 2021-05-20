@@ -84,6 +84,22 @@ type CloudProfileSpec struct {
 	// +patchStrategy=merge
 	// +optional
 	VolumeTypes []VolumeType `json:"volumeTypes,omitempty" patchStrategy:"merge" patchMergeKey:"name" protobuf:"bytes,9,rep,name=volumeTypes"`
+	// MonitoringConfig contains settings for the monitoring stack
+	// +optional
+	Monitoring MonitoringConfig `json:"monitoring,omitempty" protobuf:"bytes,10,opt,name=monitoring"`
+}
+
+// MonitoringConfig contains settings for the monitoring stack
+type MonitoringConfig struct {
+	// RemoteWriteURL contains a Url for remote write
+	// +optional
+	RemoteWriteURL string `json:"remoteWriteURL,omitempty" protobuf:"bytes,1,opt,name=remoteWriteURL"`
+	// RemoteWriteURL contains a username for remote write
+	// +optional
+	RemoteWriteUsername string `json:"remoteWriteUsername,omitempty" protobuf:"bytes,2,opt,name=remoteWriteUsername"`
+	// RemoteWriteUsername contains a password for remote write
+	// +optional
+	RemoteWritePassword string `json:"remoteWritePassword,omitempty" protobuf:"bytes,3,opt,name=remoteWritePassword"`
 }
 
 // SeedSelector contains constraints for selecting seed to be usable for shoots using a profile
@@ -158,9 +174,14 @@ type MachineTypeStorage struct {
 	// Class is the class of the storage type.
 	Class string `json:"class" protobuf:"bytes,1,opt,name=class"`
 	// StorageSize is the storage size.
-	StorageSize resource.Quantity `json:"size" protobuf:"bytes,2,opt,name=size"`
+	// +optional
+	StorageSize *resource.Quantity `json:"size,omitempty" protobuf:"bytes,2,opt,name=size"`
 	// Type is the type of the storage.
 	Type string `json:"type" protobuf:"bytes,3,opt,name=type"`
+	// MinSize is the minimal supported storage size.
+	// This overrides any other common minimum size configuration from `spec.volumeTypes[*].minSize`.
+	// +optional
+	MinSize *resource.Quantity `json:"minSize,omitempty" protobuf:"bytes,4,opt,name=minSize"`
 }
 
 // Region contains certain properties of a region.
@@ -200,6 +221,9 @@ type VolumeType struct {
 	// Usable defines if the volume type can be used for shoot clusters.
 	// +optional
 	Usable *bool `json:"usable,omitempty" protobuf:"varint,3,opt,name=usable"`
+	// MinSize is the minimal supported storage size.
+	// +optional
+	MinSize *resource.Quantity `json:"minSize,omitempty" protobuf:"bytes,4,opt,name=minSize"`
 }
 
 const (

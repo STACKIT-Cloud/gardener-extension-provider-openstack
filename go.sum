@@ -604,8 +604,12 @@ github.com/spf13/viper v1.4.0/go.mod h1:PTJ7Z/lr49W6bUbkmS1V3by4uWynFiR9p7+dSq/y
 github.com/spf13/viper v1.6.1/go.mod h1:t3iDnF5Jlj76alVNuyFBk5oUMCvsrkbvZK0WQdfDi5k=
 github.com/spf13/viper v1.7.0 h1:xVKxvI7ouOI5I+U9s2eeiUfMaWBVoXA3AWskkrqK0VM=
 github.com/spf13/viper v1.7.0/go.mod h1:8WkrPz2fc9jxqZNCJI/76HCieCp4Q8HaLFoCha5qpdg=
+github.com/stackitcloud/etcd-druid v0.3.0-ske h1:m5A4MBcqVn/9H2D9o8ytuNHdBRy5PcUVg/8jUOG0dGo=
+github.com/stackitcloud/etcd-druid v0.3.0-ske/go.mod h1:uxZjZ57gIgpX554vGp495g2i8DByoS3OkVtiqsxtbwk=
 github.com/stackitcloud/gardener v1.22.3-ske h1:eSpsyMZMrh5HXx4+9NbF5jSe5y6P+v19B40EbZyt+ro=
 github.com/stackitcloud/gardener v1.22.3-ske/go.mod h1:1+dhiNqQq8FNGnQbexkcJx6lBvdGFMOmmM5Bl9UVs5o=
+github.com/stackitcloud/gardener v1.22.3-ske-1 h1:Df1pgnZlmdEkyrx3HO6721qrLIiQ7zTRmtXAhcx2rJ4=
+github.com/stackitcloud/gardener v1.22.3-ske-1/go.mod h1:43ihG9ZsfazjfXe8v2m4P+oYMNPLtIhAuxLzz2NMfuU=
 github.com/stoewer/go-strcase v1.2.0/go.mod h1:IBiWB2sKIp3wVVQ3Y035++gc+knqhUQag1KpM8ahLw8=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/objx v0.1.1/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=

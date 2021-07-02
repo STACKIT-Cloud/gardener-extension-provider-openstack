@@ -14,7 +14,7 @@ images:
   csi-snapshot-controller: image-repository:image-tag
 
 socketPath: /var/lib/csi/sockets/pluginproxy
-timeout: 3m
+timeout: 6m
 userAgentHeaders: []
 
 resources:

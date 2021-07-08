@@ -42,6 +42,7 @@ PASSWORD           := .kube-secrets/openstack/password.secret
 TENANT_NAME        := .kube-secrets/openstack/tenant_name.secret
 USER_NAME          := .kube-secrets/openstack/user_name.secret
 
+
 #########################################
 # Rules for local development scenarios #
 #########################################

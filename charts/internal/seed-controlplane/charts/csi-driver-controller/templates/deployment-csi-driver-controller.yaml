@@ -125,7 +125,10 @@ spec:
         - --leader-election
         - --leader-election-namespace=kube-system
         - --timeout={{ .Values.timeout }}
-        - --v=5
+        - --retry-interval-start=1m
+        - --retry-interval-max=15m
+        - --reconcile-sync=5m
+        - --v=3
         env:
         - name: ADDRESS
           value: {{ .Values.socketPath }}/csi.sock
